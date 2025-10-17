@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DeepSeek Code Review Assistant</title>
+<style>
+body {
+  font-family: "Segoe UI", sans-serif;
+  background: linear-gradient(120deg, #c9eaff, #f0faff);
+  margin: 0;
+  padding: 0;
+  color: #333;
+}
+.container {
+  width: 85%;
+  max-width: 900px;
+  margin: 50px auto;
+  background: #fff;
+  padding: 30px 40px;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+}
+h1 {
+  text-align: center;
+  color: #0077cc;
+  font-size: 28px;
+}
+form {
+  margin-top: 25px;
+}
+label {
+  font-weight: bold;
+}
+select {
+  width: 100%;
+  padding: 10px;
+  font-size: 15px;
+  margin: 10px 0 20px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  outline: none;
+}
+textarea {
+  width: 100%;
+  height: 250px;
+  font-family: monospace;
+  font-size: 14px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  padding: 12px;
+  resize: vertical;
+  background: #f9f9f9;
+}
+button {
+  background: #0077cc;
+  color: #fff;
+  padding: 12px 22px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+button:hover {
+  background: #005fa3;
+}
+h2 {
+  margin-top: 30px;
+  color: #0077cc;
+}
+pre {
+  background: #f4f4f4;
+  padding: 15px;
+  border-radius: 8px;
+  font-size: 14px;
+  white-space: pre-wrap;
+  line-height: 1.5;
+}
+footer {
+  text-align: center;
+  color: #666;
+  font-size: 13px;
+  margin-top: 40px;
+}
+</style>
+</head>
+<body>
+  <div class="container">
+    <h1>Code Review Assistant (All Languages)</h1>
+
+    <form method="POST">
+      <label for="language">Select Programming Language:</label>
+      <select name="language" id="language">
+        <% const languages = [
+          "C", "C++", "C#", "Java", "Python", "JavaScript", "TypeScript", "Go",
+          "Rust", "Swift", "Kotlin", "Ruby", "PHP", "Perl", "Scala", "Haskell",
+          "R", "SQL", "HTML", "CSS", "Shell Script", "Bash", "PowerShell", 
+          "MATLAB", "Dart", "Objective-C", "Lua", "Assembly", "VHDL", "Verilog",
+          "COBOL", "Fortran", "Elixir", "Erlang", "Prolog", "Visual Basic",
+          "Groovy", "Julia", "Pascal", "Delphi", "Solidity", "JSON", "XML",
+          "YAML", "Markdown", "TeX/LaTeX", "SAS", "ABAP", "Scratch"
+        ]; %>
+        <% languages.forEach(lang => { %>
+          <option value="<%= lang %>" <%= language === lang ? 'selected' : '' %>><%= lang %></option>
+        <% }) %>
+      </select>
+
+      <label for="code">Paste your code below:</label>
+      <textarea name="code" id="code" placeholder="Write or paste your <%= language %> code here..."><%= code %></textarea>
+      
+      <br><br>
+      <button type="submit">Review Code</button>
+    </form>
+
+    <h2>Review Suggestions:</h2>
+    <pre><%= review %></pre>
+  </div>
+
+  <footer>Powered by DeepSeek V3.1 (via OpenRouter) — All Languages Supported</footer>
+</body>
+</html>
