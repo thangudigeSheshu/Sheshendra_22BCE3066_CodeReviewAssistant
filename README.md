@@ -1,2 +1,90 @@
 # Sheshendra_22BCE3066_CodeReviewAssistant
 Code Review Assistant using Node.js and API
+
+# Sheshendra_22BCE3066_CodeReviewAssistant
+
+## 🧠 Project Title
+**Code Review Assistant**
+
+---
+
+### 📄 Assignment Details
+**Name:** Sheshendra Thangudige  
+**Registration No.:** 22BCE3066  
+**Degree & Branch:** B.Tech – CSE (AI & ML)  
+**Assignment Topic:** Code Review Assistant  
+**Project Type:** Technical Assessment Project  
+**Date:** October 2025  
+
+---
+
+### 🚀 Project Overview
+The **Code Review Assistant** is an AI-powered web-based tool that reviews programming code for **readability, efficiency, bugs, best practices, and security improvements**.  
+It uses the **Unli.dev (DeepSeek)** API for intelligent and detailed code analysis.
+
+---
+
+### 🛠️ Tech Stack
+- **Frontend:** HTML, CSS, EJS  
+- **Backend:** Node.js, Express.js  
+- **AI Model API:** Unli.dev (DeepSeek)  
+- **Languages Supported:** Python, Java, C++, C, JavaScript, PHP, Go, Swift, Kotlin, and more.
+
+---
+
+### ⚙️ Setup & Installation Steps
+
+Follow these steps to run the project **locally**:
+
+#### 1️⃣ Clone the Repository
+```bash
+git clone https://github.com/SheshendraT2026/Sheshendra_22BCE3066_CodeReviewAssistant
+
+2️⃣ Move into the Project Folder
+cd Sheshendra_22BCE3066_CodeReviewAssistant
+
+3️⃣ Install Required Dependencies
+Make sure Node.js is installed on your machine, then run
+npm install express body-parser axios ejs
+
+4️⃣ Run the Application
+node app.js
+
+5️⃣ Open in Browser
+Go to:http://localhost:3000 (just and Example)
+
+
+
+
+💡 How It Works
+
+Select a programming language.
+
+Paste or write your code.
+
+Click “Review Code”.
+
+The backend sends the code to the API.
+
+The AI generates and displays a detailed review with improvement suggestions.
+
+
+🧩 Example
+
+Python Input:
+
+def add(a,b):
+    return a+b
+
+
+AI Review Output:
+
+Add a docstring to explain the function.
+
+Use type hints: def add(a: int, b: int) -> int.
+
+Validate inputs before returning.
+
+arduino
+Copy code
+http://localhost:3000
