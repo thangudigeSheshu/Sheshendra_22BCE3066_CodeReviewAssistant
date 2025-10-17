@@ -85,6 +85,3 @@ Use type hints: def add(a: int, b: int) -> int.
 
 Validate inputs before returning.
 
-arduino
-Copy code
-http://localhost:3000
