@@ -53,31 +53,31 @@ node app.js
 5️⃣ Open in Browser
 Go to:http://localhost:3000 (just and Example)
 
-
+---
 
 
 💡 How It Works
 
-Select a programming language.
+#### Select a programming language.
 
-Paste or write your code.
+#### Paste or write your code.
 
-Click “Review Code”.
+#### “Review Code”.
 
-The backend sends the code to the API.
+#### The backend sends the code to the API.
 
-The AI generates and displays a detailed review with improvement suggestions.
+#### The AI generates and displays a detailed review with improvement suggestions.
 
+---
 
 🧩 Example
 
-Python Input:
+#### Python Input:
 
-def add(a,b):
-    return a+b
+       def add(a,b):
+           return a+b
 
-
-AI Review Output:
+#### Review Output:
 
 Add a docstring to explain the function.
 
