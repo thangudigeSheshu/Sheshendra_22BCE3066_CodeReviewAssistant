@@ -81,7 +81,9 @@ Go to:http://localhost:3000 (just and Example)
 
 Add a docstring to explain the function.
 
-Use type hints: def add(a: int, b: int) -> int.
+Use type hints: 
+       
+       def add(a: int, b: int) -> int.
 
 Validate inputs before returning.
 
