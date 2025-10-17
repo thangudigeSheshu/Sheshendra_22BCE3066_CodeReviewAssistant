@@ -36,7 +36,7 @@ It uses the **Unli.dev (DeepSeek)** API for intelligent and detailed code analys
 Follow these steps to run the project **locally**:
 
 #### 1️⃣ Clone the Repository
-git clone https://github.com/SheshendraT2026/Sheshendra_22BCE3066_CodeReviewAssistant
+git clone (https://github.com/thangudigeSheshu/Sheshendra_22BCE3066_CodeReviewAssistant)
 
 ---
 
