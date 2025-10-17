@@ -87,3 +87,13 @@ Use type hints:
 
 Validate inputs before returning.
 
+---
+
+### 🖼️ Screenshots
+
+**Home Page:**
+![Home Page]("C:\Users\Lenovo\Pictures\Screenshots\Screenshot 2025-10-17 084407.png")
+
+**Code Review Output:**
+![Code Review](assets/screenshot2.png)
+
