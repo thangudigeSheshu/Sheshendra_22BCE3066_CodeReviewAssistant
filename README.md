@@ -1,7 +1,6 @@
 # Sheshendra_22BCE3066_CodeReviewAssistant
 Code Review Assistant using Node.js and API
 
-# Sheshendra_22BCE3066_CodeReviewAssistant
 
 ## 🧠 Project Title
 **Code Review Assistant**
@@ -11,7 +10,7 @@ Code Review Assistant using Node.js and API
 ### 📄 Assignment Details
 **Name:** Sheshendra Thangudige  
 **Registration No.:** 22BCE3066  
-**Degree & Branch:** B.Tech – CSE (AI & ML)  
+**Degree & Branch:** B.Tech – CSE Core
 **Assignment Topic:** Code Review Assistant  
 **Project Type:** Technical Assessment Project  
 **Date:** October 2025  
@@ -37,8 +36,9 @@ It uses the **Unli.dev (DeepSeek)** API for intelligent and detailed code analys
 Follow these steps to run the project **locally**:
 
 #### 1️⃣ Clone the Repository
-```bash
 git clone https://github.com/SheshendraT2026/Sheshendra_22BCE3066_CodeReviewAssistant
+
+---
 
 2️⃣ Move into the Project Folder
 cd Sheshendra_22BCE3066_CodeReviewAssistant
