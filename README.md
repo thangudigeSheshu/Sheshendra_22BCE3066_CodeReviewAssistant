@@ -19,7 +19,7 @@ Code Review Assistant using Node.js and API
 
 ### 🚀 Project Overview
 The **Code Review Assistant** is an AI-powered web-based tool that reviews programming code for **readability, efficiency, bugs, best practices, and security improvements**.  
-It uses the **Unli.dev (DeepSeek)** API for intelligent and detailed code analysis.
+It uses the **Unli.dev** API for intelligent and detailed code analysis.
 
 ---
 
