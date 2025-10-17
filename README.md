@@ -26,7 +26,7 @@ It uses the **Unli.dev (DeepSeek)** API for intelligent and detailed code analys
 ### 🛠️ Tech Stack
 - **Frontend:** HTML, CSS, EJS  
 - **Backend:** Node.js, Express.js  
-- **AI Model API:** Unli.dev (DeepSeek)  
+- **Model API:** Unli.dev  
 - **Languages Supported:** Python, Java, C++, C, JavaScript, PHP, Go, Swift, Kotlin, and more.
 
 ---
