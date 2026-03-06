@@ -1,0 +1,1833 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ParkMate Prime | Confirm Booking</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;600;700&family=Rajdhani:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        :root {
+            --ink: #0d1117;
+            --navy: #0f2044;
+            --dark2: #131c2e;
+            --orange: #ff9900;
+            --orange2: #e68a00;
+            --og: rgba(255, 153, 0, 0.18);
+            --green: #00c853;
+            --gs: rgba(0, 200, 83, 0.12);
+            --red: #ef233c;
+            --cyan: #00b4d8;
+            --border: rgba(255, 255, 255, 0.08);
+            --border2: rgba(255, 255, 255, 0.14);
+            --text: rgba(255, 255, 255, 0.9);
+            --text2: rgba(255, 255, 255, 0.55);
+            --text3: rgba(255, 255, 255, 0.3);
+            --surface: rgba(255, 255, 255, 0.05);
+            --surface2: rgba(255, 255, 255, 0.08);
+            --mono: 'JetBrains Mono', monospace;
+            --dis: 'Syne', sans-serif;
+            --body: 'DM Sans', sans-serif;
+            --raj: 'Rajdhani', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--body);
+            background: var(--ink);
+            min-height: 100vh;
+            overflow-x: hidden;
+            color: var(--text);
+        }
+
+        /* ── BG ── */
+        .bg {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            background:
+                radial-gradient(ellipse 70% 50% at 15% 20%, rgba(5, 117, 230, 0.1) 0%, transparent 60%),
+                radial-gradient(ellipse 50% 40% at 85% 80%, rgba(255, 153, 0, 0.08) 0%, transparent 60%),
+                radial-gradient(ellipse 40% 60% at 50% 50%, rgba(0, 180, 216, 0.04) 0%, transparent 70%),
+                #060e1f;
+        }
+
+        .bg-grid {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            background-image:
+                linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 44px 44px;
+        }
+
+        canvas#particles {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0.25;
+        }
+
+        /* ── NAVBAR ── */
+        .navbar {
+            position: sticky;
+            top: 0;
+            z-index: 200;
+            height: 60px;
+            background: rgba(13, 17, 23, 0.85);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            padding: 0 28px;
+            gap: 20px;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .navbar::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--orange), var(--cyan), var(--orange), transparent);
+            background-size: 200% 100%;
+            animation: shimBar 4s linear infinite;
+        }
+
+        @keyframes shimBar {
+            0% {
+                background-position: -200% 0
+            }
+
+            100% {
+                background-position: 200% 0
+            }
+        }
+
+        .nav-back {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text2);
+            text-decoration: none;
+            font-size: 0.85rem;
+            padding: 6px 12px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            transition: all 0.2s ease;
+        }
+
+        .nav-back:hover {
+            color: var(--orange);
+            border-color: rgba(255, 153, 0, 0.3);
+            background: var(--og);
+        }
+
+        .nav-brand {
+            font-family: var(--dis);
+            font-weight: 800;
+            font-size: 1.2rem;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-brand span {
+            color: var(--orange);
+            font-style: italic;
+        }
+
+        .nav-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, var(--orange), #ffb347);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            font-size: 0.95rem;
+            color: var(--navy);
+            box-shadow: 0 0 16px rgba(255, 153, 0, 0.35);
+        }
+
+        .nav-step-trail {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .nst {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            border: 1.5px solid var(--border2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.65rem;
+            font-weight: 700;
+            color: var(--text3);
+        }
+
+        .nst.done {
+            background: var(--green);
+            border-color: var(--green);
+            color: white;
+        }
+
+        .nst.active {
+            background: var(--orange);
+            border-color: var(--orange);
+            color: var(--navy);
+        }
+
+        .nst-line {
+            width: 20px;
+            height: 1px;
+            background: var(--border2);
+        }
+
+        /* ── PAGE ── */
+        .page {
+            position: relative;
+            z-index: 1;
+            min-height: calc(100vh - 60px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px 80px;
+            gap: 20px;
+        }
+
+        /* ── SLOT HERO ── */
+        .slot-hero {
+            width: 100%;
+            max-width: 560px;
+            background: linear-gradient(135deg, var(--navy) 0%, #0a1628 100%);
+            border: 1px solid rgba(255, 153, 0, 0.2);
+            border-radius: 18px;
+            padding: 24px 28px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            box-shadow: 0 0 40px rgba(255, 153, 0, 0.08), 0 0 0 1px rgba(255, 153, 0, 0.05);
+            animation: cardReveal 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+        }
+
+        @keyframes cardReveal {
+            from {
+                opacity: 0;
+                transform: translateY(20px) scale(0.97);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .slot-num-badge {
+            min-width: 90px;
+            height: 90px;
+            border-radius: 14px;
+            background: var(--orange);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 30px rgba(255, 153, 0, 0.4);
+            animation: badgePop 0.7s 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+        }
+
+        @keyframes badgePop {
+            from {
+                transform: scale(0.5) rotate(-10deg);
+                opacity: 0
+            }
+
+            to {
+                transform: scale(1) rotate(0);
+                opacity: 1
+            }
+        }
+
+        .slot-big {
+            font-family: var(--dis);
+            font-size: 2.4rem;
+            font-weight: 800;
+            color: var(--navy);
+            line-height: 1;
+        }
+
+        .slot-sub {
+            font-size: 0.6rem;
+            letter-spacing: 2px;
+            color: rgba(0, 0, 0, 0.5);
+            text-transform: uppercase;
+            font-family: var(--raj);
+        }
+
+        .slot-info {
+            flex: 1;
+        }
+
+        .slot-info-title {
+            font-family: var(--dis);
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 6px;
+        }
+
+        .slot-meta {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .slot-meta-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.8rem;
+            color: var(--text2);
+        }
+
+        .slot-meta-row i {
+            color: var(--orange);
+            width: 14px;
+            font-size: 0.75rem;
+        }
+
+        .slot-meta-row strong {
+            color: var(--text);
+        }
+
+        .slot-live {
+            margin-left: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 6px;
+        }
+
+        .live-chip {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            background: rgba(0, 200, 83, 0.12);
+            border: 1px solid rgba(0, 200, 83, 0.25);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--green);
+        }
+
+        .live-dot {
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: var(--green);
+            animation: liveB 1.5s ease-in-out infinite;
+        }
+
+        @keyframes liveB {
+
+            0%,
+            100% {
+                opacity: 1
+            }
+
+            50% {
+                opacity: 0.3
+            }
+        }
+
+        .occ-mini {
+            font-size: 0.65rem;
+            color: var(--text3);
+            text-align: right;
+        }
+
+        .occ-track {
+            width: 70px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.07);
+            border-radius: 99px;
+            overflow: hidden;
+        }
+
+        .occ-fill {
+            height: 100%;
+            border-radius: 99px;
+            transition: width 1s ease;
+        }
+
+        /* ── MAIN CARD ── */
+        .main-card {
+            width: 100%;
+            max-width: 560px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+            animation: cardReveal 0.6s 0.1s cubic-bezier(0.16, 1, 0.3, 1) both;
+        }
+
+        .card-head {
+            background: linear-gradient(90deg, rgba(255, 153, 0, 0.06), transparent);
+            border-bottom: 1px solid var(--border);
+            padding: 20px 24px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .card-head-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: var(--og);
+            border: 1px solid rgba(255, 153, 0, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--orange);
+            font-size: 1rem;
+        }
+
+        .card-head-title {
+            font-family: var(--dis);
+            font-weight: 700;
+            font-size: 1rem;
+            color: white;
+        }
+
+        .card-head-sub {
+            font-size: 0.75rem;
+            color: var(--text3);
+            margin-top: 1px;
+        }
+
+        .card-body {
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        /* ── FORM FIELDS ── */
+        .field {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+        }
+
+        .field-label {
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 700;
+            color: var(--text2);
+        }
+
+        .field-wrap {
+            position: relative;
+        }
+
+        .field-icon {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text3);
+            font-size: 0.85rem;
+            pointer-events: none;
+            transition: color 0.2s ease;
+        }
+
+        .field-wrap:focus-within .field-icon {
+            color: var(--orange);
+        }
+
+        .field-input {
+            width: 100%;
+            padding: 12px 14px 12px 40px;
+            background: var(--surface);
+            border: 1.5px solid var(--border);
+            border-radius: 10px;
+            color: var(--text);
+            font-family: var(--mono);
+            font-size: 0.92rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        .field-input::placeholder {
+            color: var(--text3);
+            font-weight: 400;
+            letter-spacing: 0.5px;
+            font-family: var(--body);
+        }
+
+        .field-input:focus {
+            border-color: var(--orange);
+            background: rgba(255, 153, 0, 0.05);
+            box-shadow: 0 0 0 4px rgba(255, 153, 0, 0.1);
+        }
+
+        .field-input.readonly {
+            background: rgba(255, 255, 255, 0.03);
+            border-color: rgba(255, 255, 255, 0.06);
+            color: var(--orange);
+            cursor: default;
+        }
+
+        .field-input.error {
+            border-color: var(--red);
+            box-shadow: 0 0 0 4px rgba(239, 35, 60, 0.1);
+        }
+
+        .field-input.valid {
+            border-color: var(--green);
+            box-shadow: 0 0 0 4px rgba(0, 200, 83, 0.1);
+        }
+
+        /* Validation tag */
+        .field-hint {
+            font-size: 0.72rem;
+            padding: 0 2px;
+            min-height: 16px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: var(--text3);
+            transition: color 0.2s;
+        }
+
+        .field-hint.ok {
+            color: var(--green);
+        }
+
+        .field-hint.err {
+            color: var(--red);
+        }
+
+        /* Live plate preview */
+        .plate-preview {
+            margin-top: 6px;
+            padding: 8px 16px;
+            background: white;
+            border-radius: 6px;
+            border: 2.5px solid #1a2236;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-family: var(--mono);
+            font-size: 1rem;
+            font-weight: 700;
+            color: #1a2236;
+            letter-spacing: 2px;
+            opacity: 0;
+            transition: opacity 0.25s ease, transform 0.25s ease;
+            transform: translateY(4px);
+        }
+
+        .plate-preview.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .plate-ind {
+            width: 10px;
+            background: #1a3a8a;
+            border-radius: 2px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .plate-ind-flag {
+            width: 7px;
+            height: 5px;
+            background: linear-gradient(#ff9933 33%, white 33% 66%, #138808 66%);
+            border-radius: 1px;
+            margin-bottom: 2px;
+        }
+
+        /* ── VEHICLE TYPE SELECTOR ── */
+        .vtype-row {
+            display: flex;
+            gap: 10px;
+        }
+
+        .vtype-btn {
+            flex: 1;
+            padding: 12px 8px;
+            background: var(--surface);
+            border: 1.5px solid var(--border);
+            border-radius: 10px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+            color: var(--text2);
+        }
+
+        .vtype-btn:hover {
+            border-color: rgba(255, 153, 0, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .vtype-btn.sel {
+            background: var(--og);
+            border-color: var(--orange);
+            color: white;
+            box-shadow: 0 4px 16px rgba(255, 153, 0, 0.2);
+        }
+
+        .vtype-btn i {
+            font-size: 1.2rem;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .vtype-btn span {
+            font-size: 0.72rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        /* ── DURATION SELECTOR ── */
+        .dur-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+        }
+
+        .dur-btn {
+            padding: 10px 4px;
+            background: var(--surface);
+            border: 1.5px solid var(--border);
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+            color: var(--text2);
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .dur-btn:hover {
+            border-color: rgba(255, 153, 0, 0.3);
+        }
+
+        .dur-btn.sel {
+            background: var(--og);
+            border-color: var(--orange);
+            color: white;
+            transform: scale(1.04);
+        }
+
+        .dur-btn .dur-hrs {
+            font-family: var(--mono);
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: inherit;
+            display: block;
+            line-height: 1;
+            margin-bottom: 3px;
+        }
+
+        .dur-btn .dur-cost {
+            font-size: 0.65rem;
+            color: inherit;
+            opacity: 0.7;
+        }
+
+        /* ── ALGO PREVIEW STRIP ── */
+        .algo-strip {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 14px 18px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+
+        .as-item {
+            text-align: center;
+        }
+
+        .as-label {
+            font-size: 0.6rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text3);
+            margin-bottom: 4px;
+        }
+
+        .as-val {
+            font-family: var(--mono);
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: white;
+        }
+
+        .as-val.orange {
+            color: var(--orange);
+        }
+
+        .as-val.green {
+            color: var(--green);
+        }
+
+        .as-val.cyan {
+            color: var(--cyan);
+        }
+
+        /* ── INFO BOX ── */
+        .info-box {
+            border-radius: 10px;
+            padding: 14px 16px;
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+            background: rgba(0, 180, 216, 0.07);
+            border: 1px solid rgba(0, 180, 216, 0.18);
+        }
+
+        .info-box i {
+            color: var(--cyan);
+            font-size: 0.95rem;
+            margin-top: 1px;
+            flex-shrink: 0;
+        }
+
+        .info-box p {
+            font-size: 0.8rem;
+            color: var(--text2);
+            line-height: 1.55;
+        }
+
+        .info-box strong {
+            color: var(--text);
+        }
+
+        /* ── COST PREVIEW ── */
+        .cost-preview {
+            background: linear-gradient(135deg, rgba(255, 153, 0, 0.07), rgba(255, 153, 0, 0.03));
+            border: 1px solid rgba(255, 153, 0, 0.15);
+            border-radius: 12px;
+            padding: 16px 18px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .cost-breakdown {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .cost-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 60px;
+            font-size: 0.78rem;
+            color: var(--text2);
+        }
+
+        .cost-row span:last-child {
+            font-family: var(--mono);
+            color: var(--text);
+        }
+
+        .cost-total-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 60px;
+            padding-top: 8px;
+            margin-top: 4px;
+            border-top: 1px solid rgba(255, 153, 0, 0.1);
+        }
+
+        .cost-total-label {
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .cost-total-amt {
+            font-family: var(--mono);
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--orange);
+        }
+
+        .wallet-check {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 6px;
+        }
+
+        .wallet-bal {
+            font-family: var(--mono);
+            font-size: 0.8rem;
+            color: var(--text2);
+        }
+
+        .wallet-ok {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.72rem;
+            font-weight: 600;
+            color: var(--green);
+        }
+
+        .wallet-err {
+            color: var(--red);
+        }
+
+        /* ── SUBMIT BUTTON ── */
+        .submit-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, var(--orange) 0%, #ffb347 100%);
+            border: none;
+            border-radius: 12px;
+            font-family: var(--dis);
+            font-weight: 700;
+            font-size: 1rem;
+            color: var(--navy);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 6px 24px rgba(255, 153, 0, 0.35);
+            transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+            overflow: hidden;
+            letter-spacing: 0.5px;
+        }
+
+        .submit-btn::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.5s ease;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 32px rgba(255, 153, 0, 0.45);
+        }
+
+        .submit-btn:hover::before {
+            transform: translateX(100%);
+        }
+
+        .submit-btn:active {
+            transform: scale(0.98);
+        }
+
+        .submit-btn.loading {
+            pointer-events: none;
+            opacity: 0.8;
+        }
+
+        .submit-btn.loading i {
+            animation: spin 0.6s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Ripple */
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.2);
+            transform: scale(0);
+            animation: ripA 0.5s ease-out;
+            pointer-events: none;
+        }
+
+        @keyframes ripA {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+
+        /* ── TERMS ── */
+        .terms-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            font-size: 0.75rem;
+            color: var(--text3);
+        }
+
+        .terms-row input[type=checkbox] {
+            accent-color: var(--orange);
+            width: 14px;
+            height: 14px;
+            flex-shrink: 0;
+            margin-top: 2px;
+            cursor: pointer;
+        }
+
+        .terms-row a {
+            color: var(--orange);
+            text-decoration: none;
+        }
+
+        .terms-row a:hover {
+            text-decoration: underline;
+        }
+
+        /* ── TRUST BADGES ── */
+        .trust-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .trust-badge {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.72rem;
+            color: var(--text3);
+            font-weight: 500;
+        }
+
+        .trust-badge i {
+            color: var(--text3);
+            font-size: 0.75rem;
+        }
+
+        /* ── TOKEN REVEAL MODAL ── */
+        #tokenReveal {
+            position: fixed;
+            inset: 0;
+            z-index: 9000;
+            background: rgba(6, 14, 31, 0.92);
+            backdrop-filter: blur(12px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 0;
+        }
+
+        .tr-box {
+            background: linear-gradient(135deg, #0f2044 0%, #0a1628 100%);
+            border: 1px solid rgba(255, 153, 0, 0.3);
+            border-radius: 20px;
+            padding: 40px 36px;
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+            box-shadow: 0 0 80px rgba(255, 153, 0, 0.15), 0 0 0 1px rgba(255, 153, 0, 0.1);
+            animation: trReveal 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+        }
+
+        @keyframes trReveal {
+            from {
+                transform: scale(0.7) translateY(30px);
+                opacity: 0
+            }
+
+            to {
+                transform: scale(1) translateY(0);
+                opacity: 1
+            }
+        }
+
+        .tr-icon {
+            font-size: 3rem;
+            margin-bottom: 16px;
+            animation: trBounce 1s 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+        }
+
+        @keyframes trBounce {
+            from {
+                transform: scale(0);
+                opacity: 0
+            }
+
+            to {
+                transform: scale(1);
+                opacity: 1
+            }
+        }
+
+        .tr-title {
+            font-family: var(--dis);
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: white;
+            margin-bottom: 4px;
+        }
+
+        .tr-sub {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.45);
+            margin-bottom: 24px;
+        }
+
+        .tr-token-wrap {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 153, 0, 0.2);
+            border-radius: 12px;
+            padding: 16px 20px;
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tr-token-wrap::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, transparent, rgba(255, 153, 0, 0.06), transparent);
+            animation: tShimmer 2s linear infinite;
+        }
+
+        @keyframes tShimmer {
+            from {
+                transform: translateX(-100%)
+            }
+
+            to {
+                transform: translateX(100%)
+            }
+        }
+
+        .tr-token-label {
+            font-size: 0.65rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.35);
+            margin-bottom: 8px;
+            font-family: var(--raj);
+        }
+
+        .tr-token-val {
+            font-family: var(--mono);
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--orange);
+            letter-spacing: 3px;
+        }
+
+        .tr-token-val span {
+            display: inline-block;
+            opacity: 0;
+            animation: charPop 0.05s ease forwards;
+        }
+
+        @keyframes charPop {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .tr-meta {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .tr-meta-item {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.04);
+            border-radius: 8px;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .tr-meta-label {
+            font-size: 0.6rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: rgba(255, 255, 255, 0.3);
+            margin-bottom: 4px;
+        }
+
+        .tr-meta-val {
+            font-family: var(--mono);
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: white;
+        }
+
+        .tr-progress-wrap {
+            height: 4px;
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: 99px;
+            overflow: hidden;
+            margin-bottom: 8px;
+        }
+
+        .tr-progress {
+            height: 100%;
+            background: linear-gradient(90deg, var(--orange), #ffb347);
+            width: 100%;
+            animation: trDrain 2.5s linear forwards;
+        }
+
+        @keyframes trDrain {
+            from {
+                width: 100%
+            }
+
+            to {
+                width: 0%
+            }
+        }
+
+        .tr-redirect {
+            font-size: 0.72rem;
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        /* ── TOAST ── */
+        #toasts {
+            position: fixed;
+            top: 70px;
+            right: 16px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .toast {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 11px 18px;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: white;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+            animation: tIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            max-width: 300px;
+            border-left: 4px solid transparent;
+        }
+
+        .toast.ok {
+            background: rgba(10, 22, 44, 0.97);
+            border-color: var(--green);
+        }
+
+        .toast.err {
+            background: rgba(30, 5, 10, 0.97);
+            border-color: var(--red);
+        }
+
+        .toast.inf {
+            background: rgba(5, 15, 30, 0.97);
+            border-color: var(--cyan);
+        }
+
+        @keyframes tIn {
+            from {
+                transform: translateX(110%) scale(0.8);
+                opacity: 0
+            }
+
+            to {
+                transform: translateX(0) scale(1);
+                opacity: 1
+            }
+        }
+
+        /* ── MISC ── */
+        .divider {
+            border: none;
+            border-top: 1px solid var(--border);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(12px)
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0)
+            }
+        }
+
+        .anim {
+            animation: fadeIn 0.4s ease both;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="bg"></div>
+    <div class="bg-grid"></div>
+    <canvas id="particles"></canvas>
+
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <a href="parking.html" class="nav-back"><i class="fas fa-arrow-left"></i> Back</a>
+        <div class="nav-brand">
+            <div class="nav-icon">P</div> ParkMate<span>Prime</span>
+        </div>
+        <div class="nav-step-trail">
+            <div class="nst done" title="Select Slot"><i class="fas fa-check"></i></div>
+            <div class="nst-line"></div>
+            <div class="nst active">2</div>
+            <div class="nst-line"></div>
+            <div class="nst">3</div>
+        </div>
+    </nav>
+
+    <!-- PAGE -->
+    <div class="page">
+
+        <!-- Slot Hero -->
+        <div class="slot-hero" id="slotHero">
+            <div class="slot-num-badge">
+                <div class="slot-big" id="slotNumBig">—</div>
+                <div class="slot-sub">SLOT</div>
+            </div>
+            <div class="slot-info">
+                <div class="slot-info-title" id="slotZoneName">Loading zone...</div>
+                <div class="slot-meta">
+                    <div class="slot-meta-row"><i class="fas fa-tag"></i> Rate: <strong id="slotRate">—</strong></div>
+                    <div class="slot-meta-row"><i class="fas fa-shield-alt"></i> Status: <strong
+                            style="color:var(--green)">AVAILABLE</strong></div>
+                    <div class="slot-meta-row"><i class="fas fa-clock"></i> Est. wait: <strong id="slotWait">—</strong>
+                    </div>
+                </div>
+            </div>
+            <div class="slot-live">
+                <div class="live-chip">
+                    <div class="live-dot"></div> LIVE
+                </div>
+                <div class="occ-mini" id="occTxt">—% Full</div>
+                <div class="occ-track">
+                    <div class="occ-fill" id="occFill"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Form Card -->
+        <div class="main-card">
+            <div class="card-head">
+                <div class="card-head-icon"><i class="fas fa-car-side"></i></div>
+                <div>
+                    <div class="card-head-title">Confirm Your Booking</div>
+                    <div class="card-head-sub">Enter vehicle details to lock this slot</div>
+                </div>
+            </div>
+
+            <div class="card-body">
+
+                <!-- Vehicle Registration -->
+                <div class="field">
+                    <div class="field-label">Vehicle Registration Number</div>
+                    <div class="field-wrap">
+                        <i class="fas fa-id-card field-icon"></i>
+                        <input type="text" id="vehInput" class="field-input" placeholder="e.g. TN38K1234" maxlength="12"
+                            autocomplete="off" spellcheck="false">
+                    </div>
+                    <div class="field-hint" id="vehHint"><i class="fas fa-info-circle"></i> Enter as printed on your RC
+                        Book</div>
+                    <div class="plate-preview" id="platePrev">
+                        <div class="plate-ind">
+                            <div class="plate-ind-flag"></div>
+                        </div>
+                        <span id="plateText">——</span>
+                    </div>
+                </div>
+
+                <!-- Vehicle Type -->
+                <div class="field">
+                    <div class="field-label">Vehicle Type</div>
+                    <div class="vtype-row" id="vtypeRow">
+                        <div class="vtype-btn sel" data-type="car" onclick="selectVType(this,'car',1)">
+                            <i class="fas fa-car"></i><span>Car</span>
+                        </div>
+                        <div class="vtype-btn" data-type="bike" onclick="selectVType(this,'bike',0.5)">
+                            <i class="fas fa-motorcycle"></i><span>Bike</span>
+                        </div>
+                        <div class="vtype-btn" data-type="suv" onclick="selectVType(this,'suv',1.2)">
+                            <i class="fas fa-truck"></i><span>SUV</span>
+                        </div>
+                        <div class="vtype-btn" data-type="ev" onclick="selectVType(this,'ev',1,'ev')">
+                            <i class="fas fa-bolt"></i><span>EV</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Duration -->
+                <div class="field">
+                    <div class="field-label">Parking Duration</div>
+                    <div class="dur-row" id="durRow">
+                        <div class="dur-btn" onclick="selectDur(this,1)" data-h="1">
+                            <span class="dur-hrs">1</span><span class="dur-cost" id="dc1">—</span>
+                        </div>
+                        <div class="dur-btn sel" onclick="selectDur(this,2)" data-h="2">
+                            <span class="dur-hrs">2</span><span class="dur-cost" id="dc2">—</span>
+                        </div>
+                        <div class="dur-btn" onclick="selectDur(this,4)" data-h="4">
+                            <span class="dur-hrs">4</span><span class="dur-cost" id="dc3">—</span>
+                        </div>
+                        <div class="dur-btn" onclick="selectDur(this,8)" data-h="8">
+                            <span class="dur-hrs">8</span><span class="dur-cost" id="dc4">—</span>
+                        </div>
+                    </div>
+                    <div class="dur-row" style="grid-template-columns:repeat(2,1fr);gap:8px;margin-top:8px;">
+                        <div class="dur-btn" onclick="selectDur(this,12)" data-h="12">
+                            <span class="dur-hrs">12</span><span class="dur-cost" id="dc5">—</span>
+                        </div>
+                        <div class="dur-btn" onclick="selectDur(this,24)" data-h="24">
+                            <span class="dur-hrs">24</span><span class="dur-cost" id="dc6">—</span>
+                        </div>
+                    </div>
+                </div>
+
+                <hr class="divider">
+
+                <!-- Algorithm Strip -->
+                <div class="algo-strip">
+                    <div class="as-item">
+                        <div class="as-label">Zone Score</div>
+                        <div class="as-val orange" id="asZone">—</div>
+                    </div>
+                    <div class="as-item">
+                        <div class="as-label">Demand</div>
+                        <div class="as-val" id="asDemand">—</div>
+                    </div>
+                    <div class="as-item">
+                        <div class="as-label">Est. Cost</div>
+                        <div class="as-val green" id="asCost">—</div>
+                    </div>
+                </div>
+
+                <!-- Cost Preview -->
+                <div class="cost-preview" id="costPreview">
+                    <div class="cost-breakdown">
+                        <div class="cost-row"><span>Base rate</span><span id="cpBase">—</span></div>
+                        <div class="cost-row"><span>Duration</span><span id="cpDur">—</span></div>
+                        <div class="cost-row"><span>Vehicle multiplier</span><span id="cpMult">—</span></div>
+                        <div class="cost-row"><span>Free period (15 min)</span><span style="color:var(--green)">−
+                                ₹0</span></div>
+                        <div class="cost-total-row">
+                            <span class="cost-total-label">Estimated Total</span>
+                            <span class="cost-total-amt" id="cpTotal">—</span>
+                        </div>
+                    </div>
+                    <div class="wallet-check">
+                        <div class="wallet-bal">Wallet: <span id="walletBal">—</span></div>
+                        <div class="wallet-ok" id="walletStatus"><i class="fas fa-check-circle"></i> Sufficient</div>
+                    </div>
+                </div>
+
+                <!-- Info -->
+                <div class="info-box">
+                    <i class="fas fa-info-circle"></i>
+                    <p><strong>Free for first 15 minutes.</strong> Amount is deducted from your ParkMate Wallet on exit.
+                        Cancellation is free if done within 5 minutes of booking.</p>
+                </div>
+
+                <hr class="divider">
+
+                <!-- Terms -->
+                <div class="terms-row">
+                    <input type="checkbox" id="termsCheck" onchange="checkReady()">
+                    <label for="termsCheck">I agree to ParkMate's <a href="#">Terms of Parking</a> and <a
+                            href="#">Privacy Policy</a>. I confirm this vehicle belongs to me.</label>
+                </div>
+
+                <!-- Submit -->
+                <button class="submit-btn" id="submitBtn" onclick="confirmBooking(event)" disabled
+                    style="opacity:0.5;pointer-events:none;">
+                    <i class="fas fa-lock"></i> Lock Slot &amp; Generate Token
+                </button>
+
+                <!-- Trust row -->
+                <div class="trust-row">
+                    <div class="trust-badge"><i class="fas fa-shield-alt"></i> AES-256 Encrypted</div>
+                    <div class="trust-badge"><i class="fas fa-bolt"></i> Instant Lock</div>
+                    <div class="trust-badge"><i class="fas fa-undo"></i> Free Cancellation</div>
+                </div>
+
+            </div><!-- card-body -->
+        </div><!-- main-card -->
+
+    </div><!-- page -->
+
+    <!-- TOKEN REVEAL MODAL -->
+    <div id="tokenReveal">
+        <div class="tr-box">
+            <div class="tr-icon">🎫</div>
+            <div class="tr-title">Slot Locked!</div>
+            <div class="tr-sub">Your parking token has been generated</div>
+            <div class="tr-token-wrap">
+                <div class="tr-token-label">Booking Token / PNR</div>
+                <div class="tr-token-val" id="trTokenVal"></div>
+            </div>
+            <div class="tr-meta">
+                <div class="tr-meta-item">
+                    <div class="tr-meta-label">Slot</div>
+                    <div class="tr-meta-val" id="trSlot">—</div>
+                </div>
+                <div class="tr-meta-item">
+                    <div class="tr-meta-label">Duration</div>
+                    <div class="tr-meta-val" id="trDur">—</div>
+                </div>
+                <div class="tr-meta-item">
+                    <div class="tr-meta-label">Amount</div>
+                    <div class="tr-meta-val" id="trAmt">—</div>
+                </div>
+            </div>
+            <div class="tr-progress-wrap">
+                <div class="tr-progress"></div>
+            </div>
+            <div class="tr-redirect">Redirecting to your E-Ticket...</div>
+        </div>
+    </div>
+
+    <div id="toasts"></div>
+
+    <script>
+        /* ══════════════════════════════════════
+           SOUND ENGINE
+        ══════════════════════════════════════ */
+        const SFX = {
+            ctx: null,
+            init() { try { this.ctx = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) { } },
+            tone(freq, type, dur, vol, delay = 0) {
+                if (!this.ctx) this.init();
+                if (!this.ctx) return;
+                const o = this.ctx.createOscillator(), g = this.ctx.createGain();
+                o.connect(g); g.connect(this.ctx.destination);
+                const t = this.ctx.currentTime + delay;
+                o.frequency.setValueAtTime(freq, t); o.type = type;
+                g.gain.setValueAtTime(vol, t);
+                g.gain.exponentialRampToValueAtTime(0.001, t + dur);
+                o.start(t); o.stop(t + dur);
+            },
+            click() { this.tone(600, 'square', 0.04, 0.06); },
+            select() { this.tone(800, 'sine', 0.06, 0.1); },
+            type() { this.tone(440, 'square', 0.02, 0.04); },
+            error() { this.tone(200, 'sawtooth', 0.2, 0.1); },
+            success() {
+                this.tone(523, 'sine', 0.1, 0.12, 0);
+                this.tone(659, 'sine', 0.1, 0.12, 0.1);
+                this.tone(784, 'sine', 0.15, 0.14, 0.2);
+                this.tone(1047, 'sine', 0.25, 0.15, 0.35);
+            },
+            lock() {
+                this.tone(300, 'sawtooth', 0.05, 0.08, 0);
+                this.tone(400, 'sine', 0.1, 0.1, 0.06);
+                this.tone(600, 'sine', 0.15, 0.12, 0.14);
+            }
+        };
+
+        /* ══════════════════════════════════════
+           PARTICLES
+        ══════════════════════════════════════ */
+        (function () {
+            const c = document.getElementById('particles');
+            const cx = c.getContext('2d');
+            let W, H, pts = [];
+            function resize() { W = c.width = window.innerWidth; H = c.height = window.innerHeight; }
+            resize(); window.addEventListener('resize', resize);
+            for (let i = 0; i < 55; i++) pts.push({ x: Math.random() * 1400, y: Math.random() * 900, vx: (Math.random() - 0.5) * 0.3, vy: (Math.random() - 0.5) * 0.3, r: Math.random() * 1.5 + 0.5 });
+            function draw() {
+                cx.clearRect(0, 0, W, H);
+                pts.forEach(p => {
+                    p.x += p.vx; p.y += p.vy;
+                    if (p.x < 0 || p.x > W) p.vx *= -1; if (p.y < 0 || p.y > H) p.vy *= -1;
+                    cx.beginPath(); cx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+                    cx.fillStyle = 'rgba(255,153,0,0.6)'; cx.fill();
+                });
+                pts.forEach((a, i) => pts.slice(i + 1).forEach(b => {
+                    const d = Math.hypot(a.x - b.x, a.y - b.y);
+                    if (d < 100) { cx.strokeStyle = `rgba(255,153,0,${0.08 * (1 - d / 100)})`; cx.lineWidth = 0.5; cx.beginPath(); cx.moveTo(a.x, a.y); cx.lineTo(b.x, b.y); cx.stroke(); }
+                }));
+                requestAnimationFrame(draw);
+            }
+            draw();
+        })();
+
+        /* ══════════════════════════════════════
+           ALGORITHMS
+        ══════════════════════════════════════ */
+
+        // ALGO 1: Zone Classification
+        function classifyZone(slotId) {
+            const n = parseInt(slotId) || 1;
+            if (n <= 200) return { code: 'A', name: 'Zone A · Ground Floor', rate: 20, color: '#00c853', score: 92 };
+            if (n <= 500) return { code: 'B', name: 'Zone B · Basement', rate: 15, color: '#00b4d8', score: 78 };
+            if (n <= 900) return { code: 'C', name: 'Zone C · Rooftop', rate: 25, color: '#ff9900', score: 85 };
+            return { code: 'EV', name: 'Zone EV · Electric Bay', rate: 30, color: '#a855f7', score: 96 };
+        }
+
+        // ALGO 2: Demand Pressure Index (0-100)
+        function demandIndex() {
+            const booked = (JSON.parse(localStorage.getItem('bookedSlots')) || []).length;
+            const h = new Date().getHours();
+            const timePressure = (h >= 8 && h <= 10 || h >= 17 && h <= 20) ? 1.4 : (h >= 11 && h <= 16) ? 1.0 : 0.7;
+            const base = Math.floor(1300 * 0.35) + booked;
+            const pct = Math.min(99, Math.round(base / 1300 * 100 * timePressure));
+            let label, col;
+            if (pct < 35) { label = 'LOW'; col = 'var(--green)'; }
+            else if (pct < 65) { label = 'MOD'; col = 'var(--orange)'; }
+            else { label = 'HIGH'; col = 'var(--red)'; }
+            return { pct, label, col };
+        }
+
+        // ALGO 3: Smart Cost Calculator
+        let vtypeMultiplier = 1.0;
+        let selectedDur = 2;
+        let zoneData = null;
+
+        function calcCost() {
+            if (!zoneData) return 0;
+            const base = zoneData.rate;
+            const raw = base * selectedDur * vtypeMultiplier;
+            return Math.round(raw);
+        }
+
+        // ALGO 4: Token Generator (PNR-style)
+        function generateToken(veh, slot) {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            // Seeded random using vehicle + slot for determinism
+            let seed = [...(veh + slot)].reduce((a, c) => a ^ c.charCodeAt(0) * 31, 0x1f2e3d);
+            function rand(n) { seed = (seed * 1664525 + 1013904223) >>> 0; return seed % n; }
+            let token = 'PM';
+            for (let i = 0; i < 8; i++) token += chars[rand(chars.length)];
+            return token;
+        }
+
+        // ALGO 5: Plate Validator (Indian registration)
+        function validatePlate(plate) {
+            const p = plate.toUpperCase().replace(/[\s-]/g, '');
+            const patterns = [
+                /^[A-Z]{2}\d{2}[A-Z]{1,2}\d{4}$/,  // TN38K1234
+                /^[A-Z]{2}\d{2}[A-Z]{1,3}\d{1,4}$/, // General
+                /^[A-Z]{2}\d{1,2}[A-Z]{1,2}\d{1,4}$/,
+            ];
+            return patterns.some(r => r.test(p));
+        }
+
+        // ALGO 6: Wait Time Estimation
+        function estimateWait() {
+            const d = demandIndex();
+            if (d.pct < 30) return '< 2 min';
+            if (d.pct < 60) return '2–5 min';
+            return '5–10 min';
+        }
+
+        /* ══════════════════════════════════════
+           UI STATE
+        ══════════════════════════════════════ */
+        const params = new URLSearchParams(window.location.search);
+        const slotId = params.get('slot') || '1';
+        let termsOk = false;
+        let vehValid = false;
+
+        // Init
+        window.addEventListener('DOMContentLoaded', () => {
+            const cu = JSON.parse(localStorage.getItem('pmCurrentUser') || localStorage.getItem('currentUser') || 'null');
+            if (!cu && !localStorage.getItem('pmUser')) { window.location.href = 'index.html'; return; }
+
+            zoneData = classifyZone(slotId);
+            const demand = demandIndex();
+
+            // Slot hero
+            document.getElementById('slotNumBig').textContent = '#' + slotId;
+            document.getElementById('slotZoneName').textContent = zoneData.name;
+            document.getElementById('slotRate').textContent = '₹' + zoneData.rate + '/hr';
+            document.getElementById('slotWait').textContent = estimateWait();
+            document.getElementById('occTxt').textContent = demand.pct + '% Full';
+            const fill = document.getElementById('occFill');
+            fill.style.width = demand.pct + '%';
+            fill.style.background = demand.col;
+
+            // Algo strip
+            document.getElementById('asZone').textContent = zoneData.score + ' / 100';
+            document.getElementById('asDemand').textContent = demand.label;
+            document.getElementById('asDemand').style.color = demand.col;
+
+            // Duration cost labels
+            updateDurLabels();
+            updateCostPreview();
+
+            // Wallet
+            const bal = cu ? (cu.balance ?? cu.wallet ?? 0) : 0;
+            document.getElementById('walletBal').textContent = '₹' + bal;
+            walletBalance = bal;
+        });
+
+        let walletBalance = 0;
+
+        function updateDurLabels() {
+            const hrs = [1, 2, 4, 8, 12, 24];
+            const ids = ['dc1', 'dc2', 'dc3', 'dc4', 'dc5', 'dc6'];
+            hrs.forEach((h, i) => {
+                const cost = Math.round(zoneData.rate * h * vtypeMultiplier);
+                document.getElementById(ids[i]).textContent = '₹' + cost;
+            });
+        }
+
+        function updateCostPreview() {
+            const cost = calcCost();
+            document.getElementById('cpBase').textContent = '₹' + zoneData.rate + '/hr';
+            document.getElementById('cpDur').textContent = selectedDur + ' hr' + (selectedDur > 1 ? 's' : '');
+            document.getElementById('cpMult').textContent = '×' + vtypeMultiplier.toFixed(1);
+            document.getElementById('cpTotal').textContent = '₹' + cost;
+            document.getElementById('asCost').textContent = '₹' + cost;
+
+            const ws = document.getElementById('walletStatus');
+            if (walletBalance >= cost) {
+                ws.innerHTML = '<i class="fas fa-check-circle"></i> Sufficient';
+                ws.className = 'wallet-ok';
+            } else {
+                ws.innerHTML = '<i class="fas fa-exclamation-circle"></i> Low Balance';
+                ws.className = 'wallet-ok wallet-err';
+            }
+        }
+
+        function selectVType(el, type, mult, zone) {
+            SFX.select();
+            document.querySelectorAll('.vtype-btn').forEach(b => b.classList.remove('sel'));
+            el.classList.add('sel');
+            vtypeMultiplier = mult;
+            if (zone === 'ev' && zoneData) {
+                zoneData = classifyZone(1000); // EV zone
+                document.getElementById('slotZoneName').textContent = zoneData.name;
+                document.getElementById('slotRate').textContent = '₹' + zoneData.rate + '/hr';
+            } else if (zoneData) {
+                zoneData = classifyZone(slotId);
+                document.getElementById('slotZoneName').textContent = zoneData.name;
+                document.getElementById('slotRate').textContent = '₹' + zoneData.rate + '/hr';
+            }
+            updateDurLabels(); updateCostPreview();
+            showToast('Vehicle type: ' + type.toUpperCase(), 'inf');
+        }
+
+        function selectDur(el, hrs) {
+            SFX.select();
+            document.querySelectorAll('.dur-btn').forEach(b => b.classList.remove('sel'));
+            el.classList.add('sel');
+            selectedDur = hrs;
+            updateCostPreview();
+        }
+
+        function checkReady() {
+            termsOk = document.getElementById('termsCheck').checked;
+            const btn = document.getElementById('submitBtn');
+            if (termsOk && vehValid) {
+                btn.disabled = false; btn.style.opacity = '1'; btn.style.pointerEvents = 'auto';
+                SFX.click();
+            } else {
+                btn.disabled = true; btn.style.opacity = '0.5'; btn.style.pointerEvents = 'none';
+            }
+        }
+
+        /* ── Vehicle Input ── */
+        document.getElementById('vehInput').addEventListener('input', function () {
+            SFX.type();
+            const raw = this.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
+            this.value = raw;
+            const hint = document.getElementById('vehHint');
+            const prev = document.getElementById('platePrev');
+            const plateText = document.getElementById('plateText');
+
+            if (raw.length === 0) {
+                this.classList.remove('error', 'valid');
+                hint.className = 'field-hint'; hint.innerHTML = '<i class="fas fa-info-circle"></i> Enter as printed on your RC Book';
+                prev.classList.remove('show'); vehValid = false; checkReady(); return;
+            }
+
+            plateText.textContent = raw;
+            prev.classList.add('show');
+
+            if (raw.length >= 6 && validatePlate(raw)) {
+                this.classList.remove('error'); this.classList.add('valid');
+                hint.className = 'field-hint ok'; hint.innerHTML = '<i class="fas fa-check-circle"></i> Valid Indian registration format';
+                vehValid = true;
+                SFX.tone(880, 'sine', 0.07, 0.08);
+            } else if (raw.length >= 4) {
+                this.classList.remove('valid'); this.classList.add('error');
+                hint.className = 'field-hint err'; hint.innerHTML = '<i class="fas fa-times-circle"></i> Check format e.g. TN38K1234';
+                vehValid = false;
+            } else {
+                this.classList.remove('error', 'valid');
+                hint.className = 'field-hint'; hint.innerHTML = '<i class="fas fa-info-circle"></i> Keep typing...';
+                vehValid = false;
+            }
+            checkReady();
+        });
+
+        /* ── Ripple ── */
+        document.querySelectorAll('.submit-btn').forEach(btn => {
+            btn.addEventListener('click', function (e) {
+                const r = document.createElement('span'); r.className = 'ripple';
+                const rect = this.getBoundingClientRect(); const s = Math.max(rect.width, rect.height);
+                r.style.cssText = `width:${s}px;height:${s}px;left:${e.clientX - rect.left - s / 2}px;top:${e.clientY - rect.top - s / 2}px`;
+                this.appendChild(r); setTimeout(() => r.remove(), 600);
+            });
+        });
+
+        /* ══════════════════════════════════════
+           CONFIRM BOOKING
+        ══════════════════════════════════════ */
+        function confirmBooking(e) {
+            if (e) e.preventDefault();
+            const veh = document.getElementById('vehInput').value.trim().toUpperCase();
+
+            if (!veh || veh.length < 4) { SFX.error(); showToast('Enter a valid vehicle number', 'err'); return; }
+            if (!termsOk) { SFX.error(); showToast('Please accept the terms', 'err'); return; }
+
+            const btn = document.getElementById('submitBtn');
+            btn.classList.add('loading');
+            btn.innerHTML = '<i class="fas fa-spinner"></i> Locking Slot...';
+            SFX.lock();
+            showToast('🔒 Locking your slot...', 'inf');
+
+            // Simulate processing delay (algorithm steps)
+            setTimeout(() => {
+                const now = new Date();
+                const token = generateToken(veh, slotId);
+                const cost = calcCost();
+                const selZone = zoneData;
+
+                const ticket = {
+                    slot: slotId,
+                    veh: veh,
+                    token: token,
+                    pnr: token,
+                    timestamp: now.getTime(),
+                    timeStr: now.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' }),
+                    fullDate: now.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }),
+                    amount: cost,
+                    duration: selectedDur,
+                    zone: selZone.code,
+                    zoneName: selZone.name,
+                    rate: selZone.rate,
+                    vtype: document.querySelector('.vtype-btn.sel')?.dataset.type || 'car',
+                    user: (JSON.parse(localStorage.getItem('pmCurrentUser') || localStorage.getItem('currentUser') || 'null'))?.email || 'Guest',
+                    isReal: true,
+                };
+
+                // Lock slot
+                let booked = JSON.parse(localStorage.getItem('bookedSlots')) || [];
+                if (!booked.includes(parseInt(slotId))) {
+                    booked.push(parseInt(slotId));
+                    localStorage.setItem('bookedSlots', JSON.stringify(booked));
+                }
+
+                // Save ticket
+                localStorage.setItem('activeTicket', JSON.stringify(ticket));
+
+                // Save to admin records
+                let records = JSON.parse(localStorage.getItem('admin_records')) || [];
+                records.push({ ...ticket, status: ticket.user, id: token });
+                localStorage.setItem('admin_records', JSON.stringify(records));
+
+                SFX.success();
+                showTokenReveal(ticket);
+            }, 1800);
+        }
+
+        function showTokenReveal(ticket) {
+            const modal = document.getElementById('tokenReveal');
+            modal.style.display = 'flex';
+
+            // Animate token characters one by one
+            const tv = document.getElementById('trTokenVal');
+            tv.innerHTML = '';
+            [...ticket.token].forEach((ch, i) => {
+                const s = document.createElement('span');
+                s.textContent = ch;
+                s.style.animationDelay = (0.3 + i * 0.05) + 's';
+                tv.appendChild(s);
+                setTimeout(() => SFX.tone(400 + i * 80, 'sine', 0.06, 0.1), 300 + i * 50);
+            });
+
+            document.getElementById('trSlot').textContent = '#' + ticket.slot;
+            document.getElementById('trDur').textContent = ticket.duration + 'h';
+            document.getElementById('trAmt').textContent = '₹' + ticket.amount;
+
+            showToast('✅ Slot locked successfully!', 'ok');
+
+            setTimeout(() => {
+                window.location.href = 'TICKET.html';
+            }, 2600);
+        }
+
+        /* ══════════════════════════════════════
+           TOAST
+        ══════════════════════════════════════ */
+        function showToast(msg, type = 'ok') {
+            const c = document.getElementById('toasts');
+            const d = document.createElement('div');
+            d.className = 'toast ' + type;
+            const icons = { ok: 'check-circle', err: 'exclamation-circle', inf: 'info-circle' };
+            d.innerHTML = `<i class="fas fa-${icons[type] || 'info-circle'}"></i> ${msg}`;
+            c.appendChild(d);
+            setTimeout(() => { d.style.opacity = '0'; d.style.transition = '0.25s'; setTimeout(() => d.remove(), 260); }, 3000);
+        }
+    </script>
+</body>
+
+</html>

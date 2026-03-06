@@ -1,0 +1,1730 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ParkMate Prime | About Us</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;600&family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600;1,700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --ink: #06080f;
+            --dark: #09101f;
+            --navy: #0d1a38;
+            --orange: #ff9900;
+            --og: rgba(255, 153, 0, 0.1);
+            --og2: rgba(255, 153, 0, 0.05);
+            --green: #00e676;
+            --gs: rgba(0, 230, 118, 0.1);
+            --cyan: #18d1f0;
+            --cs: rgba(24, 209, 240, 0.08);
+            --gold: #f4c542;
+            --border: rgba(255, 255, 255, 0.07);
+            --border2: rgba(255, 255, 255, 0.13);
+            --text: rgba(255, 255, 255, 0.9);
+            --text2: rgba(255, 255, 255, 0.5);
+            --text3: rgba(255, 255, 255, 0.26);
+            --surf: rgba(255, 255, 255, 0.04);
+            --surf2: rgba(255, 255, 255, 0.08);
+            --dis: 'Syne', sans-serif;
+            --cor: 'Cormorant Garamond', serif;
+            --body: 'DM Sans', sans-serif;
+            --mono: 'JetBrains Mono', monospace;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--body);
+            background: var(--ink);
+            color: var(--text);
+            overflow-x: hidden;
+            font-size: 15px;
+            line-height: 1.7;
+        }
+
+        ::selection {
+            background: var(--og);
+            color: var(--orange);
+        }
+
+        ::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 153, 0, 0.3);
+            border-radius: 99px;
+        }
+
+        /* BG */
+        .bg {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            background: radial-gradient(ellipse 65% 50% at 15% 10%, rgba(13, 26, 56, 0.85) 0%, transparent 55%), radial-gradient(ellipse 55% 45% at 85% 85%, rgba(255, 153, 0, 0.05) 0%, transparent 55%), #06080f;
+        }
+
+        .bg-noise {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            opacity: 0.02;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+            background-size: 200px;
+        }
+
+        /* NAVBAR */
+        .navbar {
+            position: sticky;
+            top: 0;
+            z-index: 500;
+            height: 64px;
+            padding: 0 32px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            background: rgba(6, 8, 15, 0.85);
+            backdrop-filter: blur(28px);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .navbar::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--orange), var(--cyan), var(--orange), transparent);
+            background-size: 200% 100%;
+            animation: shimBar 5s linear infinite;
+        }
+
+        @keyframes shimBar {
+            0% {
+                background-position: -200% 0
+            }
+
+            100% {
+                background-position: 200% 0
+            }
+        }
+
+        .brand {
+            font-family: var(--dis);
+            font-weight: 800;
+            font-size: 1.15rem;
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 9px;
+        }
+
+        .brand span {
+            color: var(--orange);
+            font-style: italic;
+        }
+
+        .brand-icon {
+            width: 34px;
+            height: 34px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, var(--orange), #ffb347);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            color: var(--navy);
+            font-size: 0.95rem;
+            box-shadow: 0 0 16px rgba(255, 153, 0, 0.35);
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            margin-left: 24px;
+        }
+
+        .nav-link {
+            padding: 6px 12px;
+            border-radius: 7px;
+            font-size: 0.82rem;
+            font-weight: 500;
+            color: var(--text2);
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .nav-link:hover {
+            color: var(--text);
+            background: var(--surf);
+        }
+
+        .nav-link.active {
+            color: var(--orange);
+        }
+
+        .nav-right {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nb {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 7px 16px;
+            border-radius: 8px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s;
+            border: 1px solid var(--border);
+            background: var(--surf);
+            color: var(--text2);
+        }
+
+        .nb:hover {
+            color: var(--text);
+            border-color: var(--border2);
+        }
+
+        .nb-o {
+            background: var(--orange);
+            color: var(--navy);
+            border-color: var(--orange);
+            box-shadow: 0 0 20px rgba(255, 153, 0, 0.25);
+        }
+
+        .nb-o:hover {
+            background: #e68a00;
+            transform: translateY(-1px);
+        }
+
+        /* READING PROGRESS */
+        #rp {
+            position: fixed;
+            top: 64px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            z-index: 499;
+        }
+
+        #rb {
+            height: 100%;
+            width: 0;
+            background: linear-gradient(90deg, var(--orange), var(--cyan));
+            transition: width 0.1s;
+        }
+
+        /* ══ HERO CINEMATIC ══ */
+        .hero-wrap {
+            position: relative;
+            z-index: 1;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            overflow: hidden;
+            padding: 0 32px;
+        }
+
+        .hero-bg-text {
+            position: absolute;
+            right: -60px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-family: var(--dis);
+            font-size: 22vw;
+            font-weight: 800;
+            color: rgba(255, 255, 255, 0.018);
+            letter-spacing: -4px;
+            line-height: 1;
+            pointer-events: none;
+            user-select: none;
+            white-space: nowrap;
+        }
+
+        .hero-content {
+            max-width: 700px;
+            z-index: 1;
+        }
+
+        .hero-year {
+            font-family: var(--mono);
+            font-size: 0.72rem;
+            letter-spacing: 3px;
+            color: var(--orange);
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .hero-year-line {
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(90deg, var(--orange), transparent);
+            max-width: 60px;
+        }
+
+        .hero-h1 {
+            font-family: var(--cor);
+            font-size: clamp(3rem, 6.5vw, 6rem);
+            font-weight: 700;
+            line-height: 1.05;
+            color: white;
+            margin-bottom: 20px;
+        }
+
+        .hero-h1 em {
+            color: var(--orange);
+            font-style: italic;
+        }
+
+        .hero-h1 .block {
+            display: block;
+        }
+
+        .hero-h1 .small-text {
+            font-size: 0.45em;
+            font-family: var(--dis);
+            font-weight: 800;
+            color: rgba(255, 255, 255, 0.55);
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .hero-desc {
+            font-size: 1rem;
+            color: var(--text2);
+            max-width: 520px;
+            margin-bottom: 36px;
+            line-height: 1.75;
+        }
+
+        .hero-btns {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .h-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 9px;
+            padding: 14px 28px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            text-decoration: none;
+            transition: all 0.25s;
+            border: 1.5px solid transparent;
+            cursor: pointer;
+            font-family: var(--body);
+        }
+
+        .hb-o {
+            background: linear-gradient(135deg, var(--orange), #ffb347);
+            color: var(--navy);
+            box-shadow: 0 6px 28px rgba(255, 153, 0, 0.3);
+        }
+
+        .hb-o:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 40px rgba(255, 153, 0, 0.45);
+        }
+
+        .hb-g {
+            background: transparent;
+            border-color: var(--border2);
+            color: var(--text);
+        }
+
+        .hb-g:hover {
+            background: var(--surf2);
+        }
+
+        /* Floating stat cards */
+        .hero-stats {
+            position: absolute;
+            right: 5%;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            z-index: 2;
+        }
+
+        @media(max-width:900px) {
+            .hero-stats {
+                display: none;
+            }
+        }
+
+        .hstat {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border2);
+            border-radius: 16px;
+            padding: 18px 22px;
+            min-width: 180px;
+            animation: hstatFloat 6s ease-in-out infinite;
+        }
+
+        .hstat:nth-child(2) {
+            animation-delay: 2s;
+        }
+
+        .hstat:nth-child(3) {
+            animation-delay: 4s;
+        }
+
+        @keyframes hstatFloat {
+
+            0%,
+            100% {
+                transform: translateY(0)
+            }
+
+            50% {
+                transform: translateY(-10px)
+            }
+        }
+
+        .hstat-num {
+            font-family: var(--dis);
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: white;
+            line-height: 1;
+        }
+
+        .hstat-num span {
+            color: var(--orange);
+        }
+
+        .hstat-label {
+            font-size: 0.7rem;
+            color: var(--text3);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 4px;
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px)
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0)
+            }
+        }
+
+        .a1 {
+            animation: fadeUp 0.7s ease both;
+        }
+
+        .a2 {
+            animation: fadeUp 0.7s 0.1s ease both;
+        }
+
+        .a3 {
+            animation: fadeUp 0.7s 0.2s ease both;
+        }
+
+        .a4 {
+            animation: fadeUp 0.7s 0.3s ease both;
+        }
+
+        /* ══ SECTION ══ */
+        .section {
+            position: relative;
+            z-index: 1;
+            padding: 96px 32px;
+        }
+
+        .sec-wrap {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .s-ey {
+            font-family: var(--mono);
+            font-size: 0.68rem;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            color: var(--orange);
+            margin-bottom: 10px;
+        }
+
+        .s-title {
+            font-family: var(--cor);
+            font-size: clamp(2rem, 4vw, 3.2rem);
+            font-weight: 700;
+            color: white;
+            line-height: 1.1;
+            margin-bottom: 14px;
+        }
+
+        .s-title em {
+            color: var(--orange);
+            font-style: italic;
+        }
+
+        .s-sub {
+            font-size: 0.92rem;
+            color: var(--text2);
+            max-width: 560px;
+            line-height: 1.75;
+        }
+
+        /* ══ ORIGIN STORY ══ */
+        .story-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+            margin-top: 56px;
+        }
+
+        @media(max-width:780px) {
+            .story-grid {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+        }
+
+        .story-text p {
+            font-size: 0.92rem;
+            color: var(--text2);
+            margin-bottom: 16px;
+            line-height: 1.8;
+        }
+
+        .story-text p strong {
+            color: var(--text);
+        }
+
+        .story-text p em {
+            color: var(--orange);
+            font-style: italic;
+        }
+
+        .story-visual {
+            position: relative;
+        }
+
+        .story-card-stack {
+            position: relative;
+            height: 320px;
+        }
+
+        .st-card {
+            position: absolute;
+            border-radius: 18px;
+            padding: 28px;
+            border: 1px solid var(--border);
+        }
+
+        .sc1 {
+            background: linear-gradient(135deg, var(--navy), #0a1428);
+            width: 85%;
+            left: 0;
+            top: 0;
+            z-index: 2;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .sc2 {
+            background: rgba(255, 153, 0, 0.06);
+            border-color: rgba(255, 153, 0, 0.15);
+            width: 80%;
+            right: 0;
+            bottom: 0;
+            z-index: 1;
+        }
+
+        .sc3 {
+            background: rgba(24, 209, 240, 0.04);
+            border-color: rgba(24, 209, 240, 0.12);
+            width: 60%;
+            left: 10%;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 0;
+        }
+
+        .sc-year {
+            font-family: var(--mono);
+            font-size: 0.65rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--orange);
+            margin-bottom: 8px;
+        }
+
+        .sc-title {
+            font-family: var(--dis);
+            font-size: 1rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 6px;
+        }
+
+        .sc-desc {
+            font-size: 0.78rem;
+            color: var(--text2);
+            line-height: 1.6;
+        }
+
+        /* ══ MISSION + VISION ══ */
+        .mv-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 48px;
+        }
+
+        @media(max-width:680px) {
+            .mv-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .mv-card {
+            border-radius: 20px;
+            padding: 36px;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid var(--border);
+        }
+
+        .mv-card.mission {
+            background: linear-gradient(135deg, var(--navy), #0a1628);
+        }
+
+        .mv-card.vision {
+            background: rgba(255, 153, 0, 0.04);
+            border-color: rgba(255, 153, 0, 0.12);
+        }
+
+        .mv-card::before {
+            content: '';
+            position: absolute;
+            top: -30px;
+            right: -30px;
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            filter: blur(40px);
+        }
+
+        .mv-card.mission::before {
+            background: rgba(24, 209, 240, 0.15);
+        }
+
+        .mv-card.vision::before {
+            background: rgba(255, 153, 0, 0.15);
+        }
+
+        .mv-icon {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+
+        .mv-label {
+            font-family: var(--mono);
+            font-size: 0.65rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .mv-card.mission .mv-label {
+            color: var(--cyan);
+        }
+
+        .mv-card.vision .mv-label {
+            color: var(--orange);
+        }
+
+        .mv-title {
+            font-family: var(--cor);
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 14px;
+            line-height: 1.2;
+        }
+
+        .mv-title em {
+            font-style: italic;
+        }
+
+        .mv-card.vision .mv-title em {
+            color: var(--orange);
+        }
+
+        .mv-card.mission .mv-title em {
+            color: var(--cyan);
+        }
+
+        .mv-desc {
+            font-size: 0.85rem;
+            color: var(--text2);
+            line-height: 1.75;
+        }
+
+        /* ══ NUMBERS ══ */
+        .numbers-section {
+            background: linear-gradient(180deg, var(--ink) 0%, var(--dark) 100%);
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .numbers-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0;
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            overflow: hidden;
+            margin-top: 48px;
+        }
+
+        @media(max-width:680px) {
+            .numbers-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .num-cell {
+            padding: 36px 24px;
+            text-align: center;
+            border-right: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+            transition: background 0.3s;
+        }
+
+        .num-cell:nth-child(4n) {
+            border-right: none;
+        }
+
+        .num-cell:nth-child(n+5) {
+            border-bottom: none;
+        }
+
+        .num-cell:hover {
+            background: var(--surf2);
+        }
+
+        .num-val {
+            font-family: var(--dis);
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: white;
+            display: block;
+            line-height: 1;
+        }
+
+        .num-val span {
+            color: var(--orange);
+        }
+
+        .num-label {
+            font-size: 0.72rem;
+            color: var(--text3);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 8px;
+            display: block;
+        }
+
+        .num-trend {
+            font-family: var(--mono);
+            font-size: 0.68rem;
+            color: var(--green);
+            margin-top: 4px;
+            display: block;
+        }
+
+        /* ══ TIMELINE ══ */
+        .timeline {
+            margin-top: 56px;
+            position: relative;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 28px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(180deg, var(--orange), var(--cyan), var(--green));
+            border-radius: 2px;
+        }
+
+        .tl-item {
+            display: flex;
+            gap: 32px;
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        .tl-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .tl-dot {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            z-index: 1;
+            border: 2px solid var(--border2);
+            background: var(--dark);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            transition: all 0.3s ease;
+        }
+
+        .tl-item:hover .tl-dot {
+            border-color: var(--orange);
+            box-shadow: 0 0 24px rgba(255, 153, 0, 0.3);
+        }
+
+        .tl-content {
+            flex: 1;
+            padding-top: 10px;
+        }
+
+        .tl-year {
+            font-family: var(--mono);
+            font-size: 0.68rem;
+            letter-spacing: 2px;
+            color: var(--orange);
+            margin-bottom: 5px;
+        }
+
+        .tl-title {
+            font-family: var(--dis);
+            font-size: 1rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 7px;
+        }
+
+        .tl-desc {
+            font-size: 0.83rem;
+            color: var(--text2);
+            line-height: 1.65;
+        }
+
+        .tl-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 3px 10px;
+            border-radius: 5px;
+            font-size: 0.68rem;
+            font-weight: 600;
+            margin-top: 8px;
+        }
+
+        /* ══ TEAM ══ */
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-top: 48px;
+        }
+
+        @media(max-width:900px) {
+            .team-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media(max-width:480px) {
+            .team-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .team-card {
+            border-radius: 18px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            background: var(--surf);
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            cursor: pointer;
+        }
+
+        .team-card:hover {
+            transform: translateY(-6px);
+            border-color: rgba(255, 153, 0, 0.2);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+        }
+
+        .team-card-top {
+            height: 180px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .team-initials {
+            font-family: var(--dis);
+            font-size: 3rem;
+            font-weight: 800;
+            color: white;
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            z-index: 1;
+            position: relative;
+        }
+
+        .team-card-body {
+            padding: 18px;
+        }
+
+        .team-name {
+            font-family: var(--dis);
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 3px;
+        }
+
+        .team-role {
+            font-size: 0.75rem;
+            color: var(--text3);
+            margin-bottom: 12px;
+        }
+
+        .team-bio {
+            font-size: 0.78rem;
+            color: var(--text2);
+            line-height: 1.55;
+        }
+
+        .team-links {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .team-link {
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
+            background: var(--surf2);
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.72rem;
+            color: var(--text2);
+            transition: all 0.2s;
+            text-decoration: none;
+        }
+
+        .team-link:hover {
+            background: var(--og);
+            color: var(--orange);
+            border-color: rgba(255, 153, 0, 0.3);
+        }
+
+        /* ══ VALUES ══ */
+        .values-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-top: 48px;
+        }
+
+        @media(max-width:720px) {
+            .values-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .val-card {
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 26px;
+            background: var(--surf);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .val-card::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--orange), var(--cyan));
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+            border-radius: 0 0 2px 2px;
+        }
+
+        .val-card:hover {
+            transform: translateY(-4px);
+            background: var(--surf2);
+            border-color: var(--border2);
+        }
+
+        .val-card:hover::after {
+            transform: scaleX(1);
+        }
+
+        .val-num {
+            font-family: var(--mono);
+            font-size: 0.65rem;
+            letter-spacing: 2px;
+            color: var(--text3);
+            margin-bottom: 12px;
+        }
+
+        .val-icon {
+            font-size: 1.8rem;
+            margin-bottom: 12px;
+        }
+
+        .val-title {
+            font-family: var(--dis);
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 8px;
+        }
+
+        .val-desc {
+            font-size: 0.8rem;
+            color: var(--text2);
+            line-height: 1.65;
+        }
+
+        /* ══ AWARDS ══ */
+        .awards-strip {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 48px;
+        }
+
+        .award-card {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px 20px;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            background: var(--surf);
+            transition: all 0.25s ease;
+            flex: 1;
+            min-width: 220px;
+        }
+
+        .award-card:hover {
+            background: var(--surf2);
+            border-color: var(--border2);
+            transform: translateY(-2px);
+        }
+
+        .award-icon {
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        .award-title {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: white;
+        }
+
+        .award-body {
+            font-size: 0.72rem;
+            color: var(--text3);
+        }
+
+        /* ══ PRESS ══ */
+        .press-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+            margin-top: 40px;
+        }
+
+        @media(max-width:680px) {
+            .press-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .press-card {
+            padding: 22px;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            background: var(--surf);
+            transition: all 0.25s ease;
+        }
+
+        .press-card:hover {
+            background: var(--surf2);
+            transform: translateY(-2px);
+        }
+
+        .press-source {
+            font-family: var(--mono);
+            font-size: 0.65rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--orange);
+            margin-bottom: 10px;
+        }
+
+        .press-quote {
+            font-size: 0.88rem;
+            color: var(--text);
+            font-style: italic;
+            line-height: 1.65;
+            margin-bottom: 10px;
+        }
+
+        .press-date {
+            font-size: 0.7rem;
+            color: var(--text3);
+        }
+
+        /* ══ CTA ══ */
+        .cta-section {
+            border-top: 1px solid var(--border);
+        }
+
+        .cta-inner {
+            background: linear-gradient(135deg, var(--navy) 0%, #0a1628 60%, rgba(255, 153, 0, 0.04) 100%);
+            border: 1px solid rgba(255, 153, 0, 0.12);
+            border-radius: 24px;
+            padding: 60px 48px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-inner::before {
+            content: 'PARKMATE';
+            position: absolute;
+            bottom: -20px;
+            right: -20px;
+            font-family: var(--dis);
+            font-size: 10rem;
+            font-weight: 800;
+            color: rgba(255, 255, 255, 0.015);
+            pointer-events: none;
+        }
+
+        .cta-title {
+            font-family: var(--cor);
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 700;
+            color: white;
+            margin-bottom: 12px;
+        }
+
+        .cta-title em {
+            color: var(--orange);
+            font-style: italic;
+        }
+
+        .cta-sub {
+            font-size: 0.92rem;
+            color: var(--text2);
+            margin-bottom: 32px;
+        }
+
+        .cta-btns {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* FOOTER */
+        footer {
+            position: relative;
+            z-index: 1;
+            background: rgba(255, 255, 255, 0.02);
+            border-top: 1px solid var(--border);
+            padding: 28px 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        footer p {
+            font-size: 0.78rem;
+            color: var(--text3);
+        }
+
+        footer a {
+            color: var(--text2);
+            text-decoration: none;
+            font-size: 0.78rem;
+            margin: 0 8px;
+        }
+
+        footer a:hover {
+            color: var(--orange);
+        }
+
+        /* SCROLL REVEAL */
+        .reveal {
+            opacity: 0;
+            transform: translateY(24px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        .reveal.in {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .reveal-l {
+            transform: translateX(-24px);
+        }
+
+        .reveal-r {
+            transform: translateX(24px);
+        }
+
+        .reveal-l.in,
+        .reveal-r.in {
+            transform: translateX(0);
+            opacity: 1;
+        }
+
+        .rd1 {
+            transition-delay: 0.1s;
+        }
+
+        .rd2 {
+            transition-delay: 0.2s;
+        }
+
+        .rd3 {
+            transition-delay: 0.3s;
+        }
+
+        .rd4 {
+            transition-delay: 0.4s;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="bg"></div>
+    <div class="bg-noise"></div>
+    <div id="rp">
+        <div id="rb"></div>
+    </div>
+
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <a href="index.html" class="brand">
+            <div class="brand-icon">P</div>ParkMate<span>Prime</span>
+        </a>
+        <div class="nav-links">
+            <a href="#story" class="nav-link active">Our Story</a>
+            <a href="#mission" class="nav-link">Mission</a>
+            <a href="#team" class="nav-link">Team</a>
+            <a href="#values" class="nav-link">Values</a>
+            <a href="#press" class="nav-link">Press</a>
+        </div>
+        <div class="nav-right">
+            <a href="careers.html" class="nb"><i class="fas fa-briefcase"></i> Careers</a>
+            <a href="index.html" class="nb nb-o"><i class="fas fa-home"></i> Dashboard</a>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <div class="hero-wrap">
+        <div class="hero-bg-text">PARK</div>
+        <div class="hero-content">
+            <div class="hero-year a1">
+                <div class="hero-year-line"></div> Est. 2016 · Chennai, India
+            </div>
+            <h1 class="hero-h1 a2">
+                <span class="small-text">We are ParkMate Prime</span>
+                We turned<br>
+                <em>frustration</em><br>
+                into a platform.
+            </h1>
+            <p class="hero-desc a3">Born in a parking lot argument, scaled to 28 cities. ParkMate is reimagining urban
+                parking with real-time intelligence, one slot at a time.</p>
+            <div class="hero-btns a4">
+                <a href="#story" class="h-btn hb-o"><i class="fas fa-book-open"></i> Read Our Story</a>
+                <a href="careers.html" class="h-btn hb-g"><i class="fas fa-briefcase"></i> Join the Team</a>
+            </div>
+        </div>
+        <div class="hero-stats">
+            <div class="hstat" style="animation-delay:0s">
+                <div class="hstat-num">28<span>+</span></div>
+                <div class="hstat-label">Cities Served</div>
+            </div>
+            <div class="hstat">
+                <div class="hstat-num">2.4<span>M</span></div>
+                <div class="hstat-label">Monthly Users</div>
+            </div>
+            <div class="hstat">
+                <div class="hstat-num">₹48<span>Cr</span></div>
+                <div class="hstat-label">ARR · FY2025</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ORIGIN STORY -->
+    <section class="section" id="story" style="border-top:1px solid var(--border);">
+        <div class="sec-wrap">
+            <div class="story-grid">
+                <div class="story-text reveal reveal-l">
+                    <div class="s-ey">Origin Story</div>
+                    <div class="s-title">It started with a <em>45-minute</em> search for parking.</div>
+                    <p>In 2016, our founder Vikram Anand circled a Chennai mall for 45 minutes looking for a parking
+                        spot. When he finally parked — three floors up, 400m from the entrance — he thought: <em>"There
+                            has to be a smarter way."</em></p>
+                    <p>He sketched the first version of ParkMate on a napkin that same evening. The idea was simple:
+                        <strong>use real-time data to show drivers exactly where to park before they even
+                            enter.</strong></p>
+                    <p>Eight years later, ParkMate Prime serves 2.4 million monthly users across 28 Indian cities. The
+                        mission hasn't changed: <em>make parking invisible.</em></p>
+                </div>
+                <div class="story-visual reveal reveal-r">
+                    <div class="story-card-stack">
+                        <div class="st-card sc1">
+                            <div class="sc-year">2016 · The Napkin</div>
+                            <div class="sc-title">The original idea sketch</div>
+                            <div class="sc-desc">A simple QR-based slot assignment system. Drawn at a Saravana Bhavan in
+                                T. Nagar.</div>
+                        </div>
+                        <div class="st-card sc2">
+                            <div class="sc-year">2019 · First Launch</div>
+                            <div class="sc-title">100 slots. 1 mall.</div>
+                            <div class="sc-desc">Phoenix MarketCity Chennai. ₹0 in VC funding. Profitable from month 3.
+                            </div>
+                        </div>
+                        <div class="st-card sc3">
+                            <div class="sc-year">2024 · At Scale</div>
+                            <div class="sc-title">ParkMate Prime</div>
+                            <div class="sc-desc">AI-powered. 28 cities. Series B funded.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- MISSION + VISION -->
+    <section class="section" id="mission">
+        <div class="sec-wrap">
+            <div class="s-ey">Purpose</div>
+            <div class="s-title">Why we <em>exist.</em></div>
+            <div class="mv-grid">
+                <div class="mv-card mission reveal reveal-l">
+                    <div class="mv-icon">🎯</div>
+                    <div class="mv-label">Mission</div>
+                    <div class="mv-title">Eliminate parking <em>anxiety</em> in Indian cities.</div>
+                    <div class="mv-desc">We believe the 30 minutes the average Indian driver spends searching for
+                        parking daily is 30 minutes stolen from their life. Our technology gives it back — permanently.
+                    </div>
+                </div>
+                <div class="mv-card vision reveal reveal-r">
+                    <div class="mv-icon">🔭</div>
+                    <div class="mv-label">Vision</div>
+                    <div class="mv-title">A world where <em>parking finds you</em> — not the other way.</div>
+                    <div class="mv-desc">We're building toward fully autonomous parking: vehicles that book, navigate,
+                        and pay without driver intervention. Every product we ship today is a step toward that future.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- NUMBERS -->
+    <section class="section numbers-section">
+        <div class="sec-wrap">
+            <div class="s-ey">By the Numbers</div>
+            <div class="s-title">The <em>scale</em> of what we do.</div>
+            <div class="numbers-grid">
+                <div class="num-cell reveal">
+                    <span class="num-val">2.4<span>M</span></span>
+                    <span class="num-label">Monthly Active Users</span>
+                    <span class="num-trend">↑ 134% YoY</span>
+                </div>
+                <div class="num-cell reveal rd1">
+                    <span class="num-val">4.8<span>M</span></span>
+                    <span class="num-label">Daily Transactions</span>
+                    <span class="num-trend">↑ 89% YoY</span>
+                </div>
+                <div class="num-cell reveal rd2">
+                    <span class="num-val">28<span>+</span></span>
+                    <span class="num-label">Cities Operational</span>
+                    <span class="num-trend">12 more by 2026</span>
+                </div>
+                <div class="num-cell reveal rd3">
+                    <span class="num-val">99<span>.97%</span></span>
+                    <span class="num-label">Platform Uptime</span>
+                    <span class="num-trend">SLA Guaranteed</span>
+                </div>
+                <div class="num-cell reveal">
+                    <span class="num-val">180<span>+</span></span>
+                    <span class="num-label">Team Members</span>
+                    <span class="num-trend">Hiring 12 now</span>
+                </div>
+                <div class="num-cell reveal rd1">
+                    <span class="num-val">₹48<span>Cr</span></span>
+                    <span class="num-label">Annual Revenue</span>
+                    <span class="num-trend">FY2025</span>
+                </div>
+                <div class="num-cell reveal rd2">
+                    <span class="num-val">4.8<span>★</span></span>
+                    <span class="num-label">App Store Rating</span>
+                    <span class="num-trend">42K+ reviews</span>
+                </div>
+                <div class="num-cell reveal rd3">
+                    <span class="num-val">36<span>%</span></span>
+                    <span class="num-label">CO₂ Reduction</span>
+                    <span class="num-trend">vs. traditional parking</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- TIMELINE -->
+    <section class="section" id="timeline">
+        <div class="sec-wrap">
+            <div class="s-ey">Company Timeline</div>
+            <div class="s-title">Eight years of <em>shipping.</em></div>
+            <div class="timeline">
+                <div class="tl-item reveal">
+                    <div class="tl-dot">💡</div>
+                    <div class="tl-content">
+                        <div class="tl-year">2016</div>
+                        <div class="tl-title">The Idea</div>
+                        <div class="tl-desc">Vikram Anand sketches ParkMate on a napkin after a 45-minute parking search
+                            at Phoenix MarketCity, Chennai. Self-funded with ₹4 lakh personal savings.</div>
+                        <span class="tl-tag" style="background:var(--og);color:var(--orange);">Founded</span>
+                    </div>
+                </div>
+                <div class="tl-item reveal">
+                    <div class="tl-dot">🚀</div>
+                    <div class="tl-content">
+                        <div class="tl-year">2018</div>
+                        <div class="tl-title">Beta Launch</div>
+                        <div class="tl-desc">First working prototype deployed at 100 slots across 1 mall. 3,000 beta
+                            users sign up in the first week. Profitable by month 3 with zero VC money.</div>
+                        <span class="tl-tag" style="background:var(--gs);color:var(--green);">Launched</span>
+                    </div>
+                </div>
+                <div class="tl-item reveal">
+                    <div class="tl-dot">💰</div>
+                    <div class="tl-content">
+                        <div class="tl-year">2020</div>
+                        <div class="tl-title">Series A · ₹12 Crore</div>
+                        <div class="tl-desc">Sequoia India leads Series A. Expanded to Bengaluru, Hyderabad, and Pune.
+                            Team grows from 8 to 55 people. COVID pivot to contactless parking saves the company.</div>
+                        <span class="tl-tag" style="background:var(--cs);color:var(--cyan);">Funded</span>
+                    </div>
+                </div>
+                <div class="tl-item reveal">
+                    <div class="tl-dot">🧠</div>
+                    <div class="tl-content">
+                        <div class="tl-year">2022</div>
+                        <div class="tl-title">ParkMind AI Engine</div>
+                        <div class="tl-desc">Launch of our proprietary AI — ParkMind — which predicts occupancy 30
+                            minutes ahead with 94% accuracy using LSTM models. Reduces user wait time by 67%.</div>
+                        <span class="tl-tag" style="background:rgba(244,197,66,0.12);color:var(--gold);">AI
+                            Milestone</span>
+                    </div>
+                </div>
+                <div class="tl-item reveal">
+                    <div class="tl-dot">🌏</div>
+                    <div class="tl-content">
+                        <div class="tl-year">2023</div>
+                        <div class="tl-title">Series B · ₹68 Crore</div>
+                        <div class="tl-desc">Tiger Global leads Series B. Expansion to 28 cities. Launch of ParkMate
+                            Prime with EV charging bays and monthly pass system. ARR crosses ₹48 Crore.</div>
+                        <span class="tl-tag" style="background:var(--cs);color:var(--cyan);">Scaled</span>
+                    </div>
+                </div>
+                <div class="tl-item reveal">
+                    <div class="tl-dot">🏆</div>
+                    <div class="tl-content">
+                        <div class="tl-year">2025–Now</div>
+                        <div class="tl-title">The Platform Era</div>
+                        <div class="tl-desc">2.4M monthly users. APIs open to third-party navigation apps. Building
+                            toward fully autonomous parking with computer vision. Series C imminent.</div>
+                        <span class="tl-tag" style="background:rgba(255,153,0,0.12);color:var(--orange);">Today</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- TEAM -->
+    <section class="section" id="team" style="border-top:1px solid var(--border);">
+        <div class="sec-wrap">
+            <div class="s-ey">Leadership Team</div>
+            <div class="s-title">The people <em>behind</em> the platform.</div>
+            <div class="team-grid">
+                <div class="team-card reveal">
+                    <div class="team-card-top" style="background:linear-gradient(135deg,#0f2044,#1a3060);">
+                        <div class="team-initials">VA</div>
+                    </div>
+                    <div class="team-card-body">
+                        <div class="team-name">Vikram Anand</div>
+                        <div class="team-role">Founder & CEO</div>
+                        <div class="team-bio">IIT Madras. 2× founder. Built ParkMate from a napkin sketch to Series B in
+                            7 years.</div>
+                        <div class="team-links"><a href="#" class="team-link"><i class="fab fa-linkedin-in"></i></a><a
+                                href="#" class="team-link"><i class="fab fa-twitter"></i></a></div>
+                    </div>
+                </div>
+                <div class="team-card reveal rd1">
+                    <div class="team-card-top" style="background:linear-gradient(135deg,#0a2a40,#104060);">
+                        <div class="team-initials">DR</div>
+                    </div>
+                    <div class="team-card-body">
+                        <div class="team-name">Divya Raghavan</div>
+                        <div class="team-role">CTO</div>
+                        <div class="team-bio">Ex-Google, Ex-Uber. Built the ParkMind AI engine from scratch. 3 patents
+                            in real-time slot allocation.</div>
+                        <div class="team-links"><a href="#" class="team-link"><i class="fab fa-linkedin-in"></i></a><a
+                                href="#" class="team-link"><i class="fab fa-github"></i></a></div>
+                    </div>
+                </div>
+                <div class="team-card reveal rd2">
+                    <div class="team-card-top" style="background:linear-gradient(135deg,#1a1000,#3a2000);">
+                        <div class="team-initials">SK</div>
+                    </div>
+                    <div class="team-card-body">
+                        <div class="team-name">Sundar Krishnan</div>
+                        <div class="team-role">CFO</div>
+                        <div class="team-bio">IIM Ahmedabad. Orchestrated both Series A and B. Led the company to
+                            profitability in FY2023.</div>
+                        <div class="team-links"><a href="#" class="team-link"><i class="fab fa-linkedin-in"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="team-card reveal rd3">
+                    <div class="team-card-top" style="background:linear-gradient(135deg,#0a2020,#104040);">
+                        <div class="team-initials">MP</div>
+                    </div>
+                    <div class="team-card-body">
+                        <div class="team-name">Meera Pillai</div>
+                        <div class="team-role">Chief Product Officer</div>
+                        <div class="team-bio">Ex-Swiggy, Ex-OLA. Grew MAU from 400K to 2.4M in 18 months. Obsessed with
+                            zero-friction UX.</div>
+                        <div class="team-links"><a href="#" class="team-link"><i class="fab fa-linkedin-in"></i></a><a
+                                href="#" class="team-link"><i class="fab fa-twitter"></i></a></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- VALUES -->
+    <section class="section" id="values" style="border-top:1px solid var(--border);">
+        <div class="sec-wrap">
+            <div class="s-ey">Core Values</div>
+            <div class="s-title">What we <em>believe</em> in.</div>
+            <div class="values-grid">
+                <div class="val-card reveal">
+                    <div class="val-num">01</div>
+                    <div class="val-icon">🚀</div>
+                    <div class="val-title">Ship It</div>
+                    <div class="val-desc">Imperfect in production beats perfect in review. We build, measure, and
+                        iterate at the speed of the problem.</div>
+                </div>
+                <div class="val-card reveal rd1">
+                    <div class="val-num">02</div>
+                    <div class="val-icon">🤝</div>
+                    <div class="val-title">Radical Honesty</div>
+                    <div class="val-desc">We say what we mean, give direct feedback, and disagree openly — with respect.
+                        No politics, no hidden agendas.</div>
+                </div>
+                <div class="val-card reveal rd2">
+                    <div class="val-num">03</div>
+                    <div class="val-icon">♿</div>
+                    <div class="val-title">Inclusive by Default</div>
+                    <div class="val-desc">Parking is for everyone. Our product and team reflect the full diversity of
+                        the cities we serve.</div>
+                </div>
+                <div class="val-card reveal">
+                    <div class="val-num">04</div>
+                    <div class="val-icon">🌱</div>
+                    <div class="val-title">Long-Term Thinking</div>
+                    <div class="val-desc">We optimize for 10-year outcomes, not quarterly metrics. Sustainable growth
+                        over vanity numbers.</div>
+                </div>
+                <div class="val-card reveal rd1">
+                    <div class="val-num">05</div>
+                    <div class="val-icon">🔬</div>
+                    <div class="val-title">Data Over Opinion</div>
+                    <div class="val-desc">Every major decision is backed by data. Gut instinct is the starting
+                        hypothesis, not the final answer.</div>
+                </div>
+                <div class="val-card reveal rd2">
+                    <div class="val-num">06</div>
+                    <div class="val-icon">🌍</div>
+                    <div class="val-title">Cities Are People</div>
+                    <div class="val-desc">Urban congestion has a human cost. We remember that behind every data point is
+                        a person trying to get somewhere.</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- AWARDS -->
+    <section class="section" style="border-top:1px solid var(--border);">
+        <div class="sec-wrap">
+            <div class="s-ey">Recognition</div>
+            <div class="s-title">Awards & <em>accolades.</em></div>
+            <div class="awards-strip">
+                <div class="award-card reveal">
+                    <div class="award-icon">🏆</div>
+                    <div>
+                        <div class="award-title">NASSCOM Top 50 Startups</div>
+                        <div class="award-body">2024 · Deep Tech Category</div>
+                    </div>
+                </div>
+                <div class="award-card reveal rd1">
+                    <div class="award-icon">🌟</div>
+                    <div>
+                        <div class="award-title">ET Startup of the Year</div>
+                        <div class="award-body">Economic Times · 2023</div>
+                    </div>
+                </div>
+                <div class="award-card reveal rd2">
+                    <div class="award-icon">🚗</div>
+                    <div>
+                        <div class="award-title">Smart City Innovation Award</div>
+                        <div class="award-body">MoUD, Govt. of India · 2022</div>
+                    </div>
+                </div>
+                <div class="award-card reveal rd3">
+                    <div class="award-icon">♻️</div>
+                    <div>
+                        <div class="award-title">Green Mobility Champion</div>
+                        <div class="award-body">CII Sustainability Summit · 2023</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PRESS -->
+    <section class="section" id="press" style="border-top:1px solid var(--border);">
+        <div class="sec-wrap">
+            <div class="s-ey">In the Press</div>
+            <div class="s-title">What <em>they're</em> saying.</div>
+            <div class="press-grid">
+                <div class="press-card reveal">
+                    <div class="press-source">Economic Times</div>
+                    <div class="press-quote">"ParkMate is solving a problem that has frustrated every Indian
+                        city-dweller for decades. Their AI approach is genuinely ahead of the market."</div>
+                    <div class="press-date">March 2024</div>
+                </div>
+                <div class="press-card reveal rd1">
+                    <div class="press-source">TechCrunch India</div>
+                    <div class="press-quote">"With Series B and a clear path to 50 cities, ParkMate is positioned to
+                        become India's default parking OS — the same way Uber became the default ride."</div>
+                    <div class="press-date">November 2023</div>
+                </div>
+                <div class="press-card reveal rd2">
+                    <div class="press-source">Forbes India</div>
+                    <div class="press-quote">"From a Chennai parking lot to a ₹48Cr ARR company — Vikram Anand's journey
+                        is the unglamorous, bootstrapped-to-funded story Indian tech needs more of."</div>
+                    <div class="press-date">January 2024</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="section cta-section">
+        <div class="sec-wrap">
+            <div class="cta-inner reveal">
+                <div class="cta-title">Ready to build the <em>future</em> with us?</div>
+                <div class="cta-sub">We're hiring across Engineering, Product, Design and Operations. See what's open.
+                </div>
+                <div class="cta-btns">
+                    <a href="careers.html" class="h-btn hb-o"><i class="fas fa-rocket"></i> View Open Roles</a>
+                    <a href="mailto:hi@parkmate.in" class="h-btn hb-g"><i class="fas fa-envelope"></i> Say Hello</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>© 2026 ParkMate Prime, Inc. · Made with ❤️ in Chennai</p>
+        <div><a href="careers.html">Careers</a><a href="policies.html">Policies</a><a href="privacy.html">Privacy</a><a
+                href="index.html">Dashboard</a></div>
+    </footer>
+
+    <script>
+        /* Reading progress */
+        window.addEventListener('scroll', () => {
+            const d = document.documentElement;
+            document.getElementById('rb').style.width = Math.min(100, d.scrollTop / (d.scrollHeight - d.clientHeight) * 100) + '%';
+        });
+
+        /* Scroll reveal */
+        const obs = new IntersectionObserver(entries => {
+            entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
+        }, { threshold: 0.08 });
+        document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+    </script>
+</body>
+
+</html>

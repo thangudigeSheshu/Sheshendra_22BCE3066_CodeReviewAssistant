@@ -1,0 +1,2007 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ParkMate Prime | Neural Parking Grid</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap"
+        rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        /* ═══════════════════════════════════════
+   DESIGN SYSTEM — DARK PRECISION THEME
+═══════════════════════════════════════ */
+        :root {
+            --bg0: #080c14;
+            --bg1: #0d1424;
+            --bg2: #111827;
+            --surface: rgba(255, 255, 255, 0.04);
+            --surfaceHov: rgba(255, 255, 255, 0.07);
+            --border: rgba(255, 255, 255, 0.08);
+            --borderGlow: rgba(99, 179, 237, 0.4);
+            --text: #e2e8f5;
+            --text2: #94a3b8;
+            --text3: #475569;
+            --blue: #3b82f6;
+            --blueGlow: rgba(59, 130, 246, 0.3);
+            --green: #10b981;
+            --greenGlow: rgba(16, 185, 129, 0.3);
+            --orange: #f59e0b;
+            --orangeGlow: rgba(245, 158, 11, 0.3);
+            --red: #ef4444;
+            --redGlow: rgba(239, 68, 68, 0.3);
+            --purple: #8b5cf6;
+            --purpleGlow: rgba(139, 92, 246, 0.3);
+            --cyan: #06b6d4;
+            --cyanGlow: rgba(6, 182, 212, 0.3);
+            --r: 10px;
+            --r2: 16px;
+            --slot-free: #10b981;
+            --slot-occ: #1e293b;
+            --slot-yours: #f59e0b;
+            --slot-ev: #06b6d4;
+            --slot-res: #8b5cf6;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: var(--bg0);
+            color: var(--text);
+            font-family: 'DM Sans', sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* ── CURSOR ── */
+        #cur,
+        #cur2 {
+            position: fixed;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 99999;
+        }
+
+        #cur {
+            width: 8px;
+            height: 8px;
+            background: var(--blue);
+            transform: translate(-50%, -50%);
+            transition: 0.05s;
+        }
+
+        #cur2 {
+            width: 28px;
+            height: 28px;
+            border: 1.5px solid rgba(59, 130, 246, 0.5);
+            transform: translate(-50%, -50%);
+            transition: all 0.14s ease;
+        }
+
+        body:has(button:hover, a:hover, .slot:hover) #cur2 {
+            transform: translate(-50%, -50%) scale(1.7);
+            border-color: var(--orange);
+        }
+
+        /* ── BG ── */
+        .bg-mesh {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            background:
+                radial-gradient(ellipse 70% 50% at 15% 20%, rgba(59, 130, 246, 0.06), transparent),
+                radial-gradient(ellipse 50% 40% at 85% 80%, rgba(139, 92, 246, 0.05), transparent),
+                radial-gradient(ellipse 40% 30% at 60% 10%, rgba(6, 182, 212, 0.04), transparent);
+        }
+
+        .bg-grid {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            background-image: linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+            background-size: 44px 44px;
+        }
+
+        #pcv {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0.3;
+        }
+
+        /* ── NAVBAR ── */
+        .navbar {
+            position: sticky;
+            top: 0;
+            z-index: 200;
+            height: 58px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 0 24px;
+            background: rgba(8, 12, 20, 0.92);
+            border-bottom: 1px solid var(--border);
+            backdrop-filter: blur(20px);
+            box-shadow: 0 2px 24px rgba(0, 0, 0, 0.5);
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            font-family: 'Syne';
+            font-weight: 800;
+            font-size: 1rem;
+            color: var(--text);
+        }
+
+        .brand:hover {
+            color: var(--blue);
+        }
+
+        .brand-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, var(--blue), var(--purple));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            color: white;
+            box-shadow: 0 4px 12px var(--blueGlow);
+        }
+
+        .nav-title {
+            font-family: 'Syne';
+            font-weight: 800;
+            font-size: 0.95rem;
+            color: var(--text);
+            flex: 1;
+            text-align: center;
+            letter-spacing: 1px;
+        }
+
+        .nav-title span {
+            color: var(--blue);
+        }
+
+        .search-bar {
+            display: flex;
+            align-items: center;
+            gap: 0;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 0 6px 0 14px;
+            transition: 0.25s;
+        }
+
+        .search-bar:focus-within {
+            border-color: var(--blue);
+            box-shadow: 0 0 0 3px var(--blueGlow);
+        }
+
+        .search-bar input {
+            background: transparent;
+            border: none;
+            outline: none;
+            color: var(--text);
+            font-family: 'JetBrains Mono';
+            font-size: 0.72rem;
+            padding: 7px 6px;
+            width: 180px;
+        }
+
+        .search-bar input::placeholder {
+            color: var(--text3);
+        }
+
+        .search-bar button {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--blue);
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 0.72rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .nav-btn {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 7px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--text2);
+            cursor: pointer;
+            transition: 0.2s;
+            white-space: nowrap;
+        }
+
+        .nav-btn:hover {
+            border-color: var(--blue);
+            color: var(--blue);
+        }
+
+        .nav-btn.active {
+            background: rgba(59, 130, 246, 0.1);
+            border-color: var(--blue);
+            color: var(--blue);
+        }
+
+        /* ── MARQUEE ── */
+        .marquee-strip {
+            background: linear-gradient(90deg, var(--bg1), var(--bg2), var(--bg1));
+            border-bottom: 1px solid var(--border);
+            overflow: hidden;
+            padding: 5px 0;
+        }
+
+        .marquee-inner {
+            display: inline-flex;
+            gap: 48px;
+            animation: mq 22s linear infinite;
+            font-family: 'JetBrains Mono';
+            font-size: 0.62rem;
+            color: var(--text3);
+            letter-spacing: 0.5px;
+        }
+
+        @keyframes mq {
+            0% {
+                transform: translateX(0);
+            }
+
+            100% {
+                transform: translateX(-50%);
+            }
+        }
+
+        .mq-item {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+        }
+
+        .mq-dot {
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+        }
+
+        /* ── LAYOUT ── */
+        .shell {
+            display: flex;
+            height: calc(100vh - 99px);
+            position: relative;
+            z-index: 2;
+        }
+
+        /* ── LEFT SIDEBAR ── */
+        .sidebar {
+            width: 280px;
+            min-width: 280px;
+            background: rgba(13, 20, 36, 0.9);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+            overflow-y: auto;
+            backdrop-filter: blur(10px);
+        }
+
+        .sidebar::-webkit-scrollbar {
+            width: 3px;
+        }
+
+        .sidebar::-webkit-scrollbar-thumb {
+            background: var(--border);
+        }
+
+        .side-section {
+            padding: 14px 16px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .side-label {
+            font-family: 'JetBrains Mono';
+            font-size: 0.56rem;
+            color: var(--text3);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        /* STAT PILLS */
+        .stat-pills {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+
+        .stat-pill {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--r);
+            padding: 12px 10px;
+            text-align: center;
+            transition: 0.2s;
+            cursor: default;
+        }
+
+        .stat-pill:hover {
+            border-color: var(--borderGlow);
+        }
+
+        .sp-val {
+            font-family: 'Syne';
+            font-weight: 800;
+            font-size: 1.3rem;
+        }
+
+        .sp-lbl {
+            font-size: 0.62rem;
+            color: var(--text3);
+            margin-top: 2px;
+            font-family: 'JetBrains Mono';
+            letter-spacing: 0.5px;
+        }
+
+        /* ZONE BARS */
+        .zone-bar {
+            margin-bottom: 10px;
+        }
+
+        .zone-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 4px;
+            font-size: 0.8rem;
+        }
+
+        .zone-name {
+            font-weight: 600;
+        }
+
+        .zone-count {
+            font-family: 'JetBrains Mono';
+            font-size: 0.68rem;
+            color: var(--text2);
+        }
+
+        .bar-track {
+            height: 5px;
+            border-radius: 3px;
+            background: rgba(255, 255, 255, 0.06);
+            overflow: hidden;
+        }
+
+        .bar-fill {
+            height: 100%;
+            border-radius: 3px;
+            transition: width 0.8s ease;
+        }
+
+        /* FILTER BTNS */
+        .filter-btns {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .fbtn {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 5px 10px;
+            border-radius: 6px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            font-size: 0.7rem;
+            color: var(--text2);
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .fbtn:hover,
+        .fbtn.on {
+            background: rgba(59, 130, 246, 0.1);
+            border-color: var(--blue);
+            color: var(--blue);
+        }
+
+        .fbtn .dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+        }
+
+        /* AI PANEL */
+        .ai-panel {
+            margin: 0;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.05), rgba(139, 92, 246, 0.05));
+            border-top: 1px solid var(--border);
+            padding: 14px 16px;
+        }
+
+        .ai-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+
+        .ai-logo {
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, var(--blue), var(--purple));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            color: white;
+            box-shadow: 0 0 12px var(--blueGlow);
+        }
+
+        .ai-name {
+            font-family: 'Syne';
+            font-weight: 700;
+            font-size: 0.82rem;
+            color: var(--text);
+        }
+
+        .ai-sub {
+            font-size: 0.58rem;
+            color: var(--blue);
+            font-family: 'JetBrains Mono';
+        }
+
+        .ai-insight {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border);
+            border-radius: var(--r);
+            padding: 10px 12px;
+            font-size: 0.78rem;
+            color: var(--text2);
+            line-height: 1.6;
+            min-height: 60px;
+            margin-bottom: 10px;
+        }
+
+        .ai-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-bottom: 8px;
+        }
+
+        .ai-chip {
+            padding: 4px 9px;
+            border-radius: 12px;
+            font-size: 0.62rem;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            color: var(--text2);
+            cursor: pointer;
+            transition: 0.15s;
+        }
+
+        .ai-chip:hover {
+            border-color: var(--blue);
+            color: var(--blue);
+        }
+
+        .ai-input-row {
+            display: flex;
+            gap: 6px;
+        }
+
+        .ai-input {
+            flex: 1;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border);
+            border-radius: 7px;
+            padding: 7px 10px;
+            font-family: 'DM Sans';
+            font-size: 0.75rem;
+            color: var(--text);
+            outline: none;
+            transition: 0.2s;
+        }
+
+        .ai-input:focus {
+            border-color: var(--blue);
+            box-shadow: 0 0 0 2px var(--blueGlow);
+        }
+
+        .ai-send {
+            width: 30px;
+            height: 30px;
+            border-radius: 7px;
+            background: var(--blue);
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.2s;
+            flex-shrink: 0;
+        }
+
+        .ai-send:hover {
+            background: #2563eb;
+        }
+
+        .ai-msg-list {
+            max-height: 160px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-bottom: 8px;
+        }
+
+        .ai-msg-list::-webkit-scrollbar {
+            width: 2px;
+        }
+
+        .ai-msg-list::-webkit-scrollbar-thumb {
+            background: var(--border);
+        }
+
+        .ai-msg {
+            font-size: 0.75rem;
+            padding: 7px 10px;
+            border-radius: 8px;
+            line-height: 1.5;
+            animation: msgIn 0.25s ease;
+        }
+
+        @keyframes msgIn {
+            from {
+                opacity: 0;
+                transform: translateY(5px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .ai-msg.bot {
+            background: rgba(59, 130, 246, 0.08);
+            border: 1px solid rgba(59, 130, 246, 0.15);
+            color: var(--text2);
+            border-radius: 3px 8px 8px 8px;
+        }
+
+        .ai-msg.user {
+            background: rgba(59, 130, 246, 0.15);
+            color: var(--blue);
+            border-radius: 8px 3px 8px 8px;
+            align-self: flex-end;
+        }
+
+        .typing {
+            display: flex;
+            gap: 3px;
+            padding: 6px 8px;
+        }
+
+        .typing span {
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: var(--blue);
+            animation: typeDot 1.2s ease-in-out infinite;
+        }
+
+        .typing span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typeDot {
+
+            0%,
+            80%,
+            100% {
+                opacity: 0.2;
+                transform: scale(0.7);
+            }
+
+            40% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* ── MAIN MAP AREA ── */
+        .map-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .map-toolbar {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 18px;
+            background: rgba(13, 20, 36, 0.8);
+            border-bottom: 1px solid var(--border);
+            flex-shrink: 0;
+            flex-wrap: wrap;
+        }
+
+        .tb-title {
+            font-family: 'Syne';
+            font-weight: 800;
+            font-size: 0.9rem;
+            color: var(--text);
+            flex: 1;
+        }
+
+        .tb-title span {
+            color: var(--blue);
+        }
+
+        .legend-items {
+            display: flex;
+            gap: 14px;
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.68rem;
+            color: var(--text2);
+            font-family: 'JetBrains Mono';
+        }
+
+        .legend-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 3px;
+        }
+
+        .view-btns {
+            display: flex;
+            gap: 4px;
+        }
+
+        .vbtn {
+            padding: 5px 10px;
+            border-radius: 6px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            font-size: 0.68rem;
+            color: var(--text2);
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .vbtn:hover,
+        .vbtn.on {
+            background: rgba(59, 130, 246, 0.1);
+            border-color: var(--blue);
+            color: var(--blue);
+        }
+
+        /* MAP SCROLL WRAPPER */
+        .map-scroll {
+            flex: 1;
+            overflow: auto;
+            padding: 16px;
+            position: relative;
+        }
+
+        .map-scroll::-webkit-scrollbar {
+            width: 5px;
+            height: 5px;
+        }
+
+        .map-scroll::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 2px;
+        }
+
+        /* LEVEL TABS */
+        .level-tabs {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 14px;
+        }
+
+        .ltab {
+            padding: 6px 14px;
+            border-radius: 6px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            font-family: 'JetBrains Mono';
+            font-size: 0.68rem;
+            color: var(--text2);
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .ltab:hover,
+        .ltab.on {
+            background: rgba(59, 130, 246, 0.1);
+            border-color: var(--blue);
+            color: var(--blue);
+        }
+
+        /* PARKING GRID */
+        .parking-building {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border);
+            border-radius: var(--r2);
+            padding: 18px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .parking-building::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: repeating-linear-gradient(0deg, transparent, transparent 49px, rgba(255, 255, 255, 0.02) 49px, rgba(255, 255, 255, 0.02) 50px),
+                repeating-linear-gradient(90deg, transparent, transparent 49px, rgba(255, 255, 255, 0.02) 49px, rgba(255, 255, 255, 0.02) 50px);
+            pointer-events: none;
+        }
+
+        /* Driving lane */
+        .lane {
+            height: 28px;
+            background: rgba(255, 255, 255, 0.015);
+            border: 1px dashed rgba(255, 255, 255, 0.06);
+            border-radius: 4px;
+            margin: 10px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'JetBrains Mono';
+            font-size: 0.58rem;
+            color: var(--text3);
+            letter-spacing: 2px;
+        }
+
+        .lane::before {
+            content: '↔  DRIVING LANE  ↔';
+        }
+
+        /* ROW LABEL */
+        .row-wrap {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+
+        .row-label {
+            width: 26px;
+            height: 26px;
+            border-radius: 6px;
+            background: rgba(59, 130, 246, 0.08);
+            border: 1px solid rgba(59, 130, 246, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'JetBrains Mono';
+            font-size: 0.65rem;
+            color: var(--blue);
+            flex-shrink: 0;
+            font-weight: 600;
+        }
+
+        .slots-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+
+        /* THE SLOT */
+        .slot {
+            width: 44px;
+            height: 52px;
+            border-radius: 7px;
+            border: 1.5px solid;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 2px;
+            cursor: pointer;
+            transition: all 0.18s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+            overflow: hidden;
+            font-family: 'JetBrains Mono';
+        }
+
+        .slot::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.06), transparent);
+            pointer-events: none;
+        }
+
+        .slot:hover {
+            transform: scale(1.15) translateY(-3px);
+            z-index: 10;
+        }
+
+        .slot:active {
+            transform: scale(0.97);
+        }
+
+        .slot.free {
+            background: rgba(16, 185, 129, 0.1);
+            border-color: rgba(16, 185, 129, 0.35);
+            color: var(--green);
+        }
+
+        .slot.free:hover {
+            background: rgba(16, 185, 129, 0.2);
+            border-color: var(--green);
+            box-shadow: 0 6px 20px var(--greenGlow);
+        }
+
+        .slot.occ {
+            background: rgba(255, 255, 255, 0.03);
+            border-color: rgba(255, 255, 255, 0.07);
+            color: var(--text3);
+            cursor: not-allowed;
+        }
+
+        .slot.yours {
+            background: rgba(245, 158, 11, 0.15);
+            border-color: rgba(245, 158, 11, 0.5);
+            color: var(--orange);
+        }
+
+        .slot.yours:hover {
+            box-shadow: 0 6px 20px var(--orangeGlow);
+        }
+
+        .slot.ev {
+            background: rgba(6, 182, 212, 0.1);
+            border-color: rgba(6, 182, 212, 0.35);
+            color: var(--cyan);
+        }
+
+        .slot.ev:hover {
+            background: rgba(6, 182, 212, 0.2);
+            border-color: var(--cyan);
+            box-shadow: 0 6px 20px var(--cyanGlow);
+        }
+
+        .slot.reserved {
+            background: rgba(139, 92, 246, 0.1);
+            border-color: rgba(139, 92, 246, 0.3);
+            color: var(--purple);
+            cursor: not-allowed;
+        }
+
+        .slot.ai-rec {
+            animation: aiPulse 1.8s ease-in-out infinite;
+        }
+
+        @keyframes aiPulse {
+
+            0%,
+            100% {
+                box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.4);
+            }
+
+            50% {
+                box-shadow: 0 0 0 6px rgba(59, 130, 246, 0);
+            }
+        }
+
+        .slot-num {
+            font-size: 0.58rem;
+            font-weight: 600;
+            line-height: 1;
+        }
+
+        .slot-icon {
+            font-size: 0.65rem;
+            line-height: 1;
+        }
+
+        .slot-tooltip {
+            position: absolute;
+            bottom: calc(100% + 8px);
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--bg2);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 8px 10px;
+            font-size: 0.68rem;
+            white-space: nowrap;
+            z-index: 50;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.15s;
+        }
+
+        .slot:hover .slot-tooltip {
+            opacity: 1;
+        }
+
+        /* HEAT OVERLAY */
+        .slot.heat-high::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: rgba(239, 68, 68, 0.12);
+            border-radius: inherit;
+            pointer-events: none;
+        }
+
+        .slot.heat-med::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: rgba(245, 158, 11, 0.1);
+            border-radius: inherit;
+            pointer-events: none;
+        }
+
+        /* ── RIGHT PANEL ── */
+        .right-panel {
+            width: 270px;
+            min-width: 270px;
+            background: rgba(13, 20, 36, 0.9);
+            border-left: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            backdrop-filter: blur(10px);
+        }
+
+        .right-panel::-webkit-scrollbar {
+            width: 3px;
+        }
+
+        .right-panel::-webkit-scrollbar-thumb {
+            background: var(--border);
+        }
+
+        .rp-section {
+            padding: 14px 16px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .rp-label {
+            font-family: 'JetBrains Mono';
+            font-size: 0.56rem;
+            color: var(--text3);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        /* ALGO CARDS */
+        .algo-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--r);
+            padding: 10px 12px;
+            margin-bottom: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .algo-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 3px;
+            bottom: 0;
+        }
+
+        .algo-card.lr::before {
+            background: var(--green);
+        }
+
+        .algo-card.heat::before {
+            background: var(--red);
+        }
+
+        .algo-card.knn::before {
+            background: var(--cyan);
+        }
+
+        .algo-card.pred::before {
+            background: var(--orange);
+        }
+
+        .algo-name {
+            font-family: 'JetBrains Mono';
+            font-size: 0.56rem;
+            color: var(--text3);
+            letter-spacing: 1px;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+        }
+
+        .algo-val {
+            font-family: 'Syne';
+            font-weight: 700;
+            font-size: 0.95rem;
+        }
+
+        /* CHART */
+        .mini-chart {
+            height: 100px;
+        }
+
+        /* SELECTED SLOT PANEL */
+        .slot-detail {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.06), rgba(139, 92, 246, 0.06));
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: var(--r2);
+            padding: 14px;
+            margin-bottom: 10px;
+        }
+
+        .sd-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .sd-num {
+            font-family: 'Syne';
+            font-weight: 800;
+            font-size: 1.5rem;
+            color: var(--blue);
+        }
+
+        .sd-badge {
+            padding: 3px 8px;
+            border-radius: 6px;
+            font-size: 0.62rem;
+            font-weight: 600;
+            font-family: 'JetBrains Mono';
+        }
+
+        .sd-rows {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-bottom: 12px;
+        }
+
+        .sd-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.78rem;
+        }
+
+        .sd-key {
+            color: var(--text3);
+        }
+
+        .sd-val {
+            font-family: 'JetBrains Mono';
+            font-size: 0.72rem;
+            color: var(--text);
+        }
+
+        .btn-book {
+            width: 100%;
+            padding: 11px;
+            border-radius: var(--r);
+            border: none;
+            cursor: pointer;
+            font-family: 'Syne';
+            font-weight: 700;
+            font-size: 0.85rem;
+            background: linear-gradient(135deg, var(--blue), var(--purple));
+            color: white;
+            box-shadow: 0 4px 16px var(--blueGlow);
+            transition: 0.2s;
+        }
+
+        .btn-book:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 8px 24px var(--blueGlow);
+        }
+
+        .btn-book:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* TOAST */
+        #toasts {
+            position: fixed;
+            top: 70px;
+            right: 16px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .toast {
+            background: var(--bg2);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 10px 14px;
+            font-size: 0.78rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            min-width: 220px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+            animation: toastIn 0.3s ease;
+        }
+
+        @keyframes toastIn {
+            from {
+                opacity: 0;
+                transform: translateX(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .toast.ok {
+            border-color: rgba(16, 185, 129, 0.4);
+            color: var(--green);
+        }
+
+        .toast.err {
+            border-color: rgba(239, 68, 68, 0.4);
+            color: var(--red);
+        }
+
+        .toast.inf {
+            border-color: rgba(59, 130, 246, 0.4);
+            color: var(--blue);
+        }
+
+        /* ANIM */
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(16px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: fadeUp 0.5s ease both;
+        }
+
+        /* PULSE */
+        .live-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--green);
+            animation: livePulse 1.4s ease-in-out infinite;
+            display: inline-block;
+        }
+
+        @keyframes livePulse {
+
+            0%,
+            100% {
+                opacity: 1;
+                box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.5);
+            }
+
+            50% {
+                opacity: 0.5;
+                box-shadow: 0 0 0 5px transparent;
+            }
+        }
+
+        /* RESPONSIVE */
+        @media(max-width:1100px) {
+            .right-panel {
+                display: none;
+            }
+        }
+
+        @media(max-width:800px) {
+            .sidebar {
+                width: 220px;
+                min-width: 220px;
+            }
+
+            .slot {
+                width: 38px;
+                height: 46px;
+            }
+        }
+
+        @media(max-width:600px) {
+            .sidebar {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="cur"></div>
+    <div id="cur2"></div>
+    <div class="bg-mesh"></div>
+    <div class="bg-grid"></div>
+    <canvas id="pcv"></canvas>
+    <div id="toasts"></div>
+
+    <!-- ═══ NAVBAR ═══ -->
+    <nav class="navbar">
+        <a href="index.html" class="brand">
+            <div class="brand-icon"><i class="fas fa-arrow-left"></i></div>
+            ParkMate <span style="color:var(--blue);">Prime</span>
+        </a>
+        <div class="nav-title">NEURAL <span>PARKING GRID</span></div>
+        <div class="search-bar">
+            <input type="text" id="slotSearch" placeholder="Search slot…" oninput="filterSlots()">
+            <button onclick="filterSlots()"><i class="fas fa-search"></i></button>
+        </div>
+        <button class="nav-btn" id="heatToggle" onclick="toggleHeat()"><i class="fas fa-fire"></i> Heatmap</button>
+        <button class="nav-btn" id="aiRecBtn" onclick="runAIRecommend()"><i class="fas fa-robot"></i> AI Pick</button>
+        <button class="nav-btn" onclick="refreshAll()"><i class="fas fa-sync"></i> Refresh</button>
+    </nav>
+
+    <!-- ═══ MARQUEE ═══ -->
+    <div class="marquee-strip">
+        <div class="marquee-inner" id="mqInner">
+            <span class="mq-item">
+                <div class="mq-dot" style="background:var(--green);"></div>ZONE A OPEN
+            </span>
+            <span class="mq-item">
+                <div class="mq-dot" style="background:var(--cyan);"></div>24 EV BAYS AVAILABLE
+            </span>
+            <span class="mq-item">
+                <div class="mq-dot" style="background:var(--orange);"></div>AI ROUTING ACTIVE
+            </span>
+            <span class="mq-item">
+                <div class="mq-dot" style="background:var(--purple);"></div>REAL-TIME SYNC ON
+            </span>
+            <span class="mq-item">
+                <div class="mq-dot" style="background:var(--blue);"></div>NEURAL GRID v3.0
+            </span>
+            <span class="mq-item">
+                <div class="mq-dot" style="background:var(--green);"></div>ZONE A OPEN
+            </span>
+            <span class="mq-item">
+                <div class="mq-dot" style="background:var(--cyan);"></div>24 EV BAYS AVAILABLE
+            </span>
+            <span class="mq-item">
+                <div class="mq-dot" style="background:var(--orange);"></div>AI ROUTING ACTIVE
+            </span>
+            <span class="mq-item">
+                <div class="mq-dot" style="background:var(--purple);"></div>REAL-TIME SYNC ON
+            </span>
+            <span class="mq-item">
+                <div class="mq-dot" style="background:var(--blue);"></div>NEURAL GRID v3.0
+            </span>
+        </div>
+    </div>
+
+    <!-- ═══ SHELL ═══ -->
+    <div class="shell">
+
+        <!-- ═══ LEFT SIDEBAR ═══ -->
+        <aside class="sidebar">
+
+            <div class="side-section">
+                <div class="side-label">Live Status <div class="live-dot" style="display:inline-block;margin-left:4px;">
+                    </div>
+                </div>
+                <div class="stat-pills">
+                    <div class="stat-pill">
+                        <div class="sp-val" id="sAvail" style="color:var(--green);">—</div>
+                        <div class="sp-lbl">FREE</div>
+                    </div>
+                    <div class="stat-pill">
+                        <div class="sp-val" id="sOcc" style="color:var(--red);">—</div>
+                        <div class="sp-lbl">OCCUPIED</div>
+                    </div>
+                    <div class="stat-pill">
+                        <div class="sp-val" id="sEV" style="color:var(--cyan);">24</div>
+                        <div class="sp-lbl">EV BAYS</div>
+                    </div>
+                    <div class="stat-pill">
+                        <div class="sp-val" id="sPct" style="color:var(--orange);">—%</div>
+                        <div class="sp-lbl">OCCUPANCY</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="side-section">
+                <div class="side-label">Zone Breakdown</div>
+                <div id="zoneBars"></div>
+            </div>
+
+            <div class="side-section">
+                <div class="side-label">Filter Slots</div>
+                <div class="filter-btns">
+                    <div class="fbtn on" data-filter="all" onclick="setFilter('all',this)">
+                        <div class="dot" style="background:var(--text2);"></div>All
+                    </div>
+                    <div class="fbtn" data-filter="free" onclick="setFilter('free',this)">
+                        <div class="dot" style="background:var(--green);"></div>Free
+                    </div>
+                    <div class="fbtn" data-filter="ev" onclick="setFilter('ev',this)">
+                        <div class="dot" style="background:var(--cyan);"></div>EV
+                    </div>
+                    <div class="fbtn" data-filter="reserved" onclick="setFilter('reserved',this)">
+                        <div class="dot" style="background:var(--purple);"></div>Reserved
+                    </div>
+                    <div class="fbtn" data-filter="occ" onclick="setFilter('occ',this)">
+                        <div class="dot" style="background:var(--text3);"></div>Occupied
+                    </div>
+                </div>
+            </div>
+
+            <div class="side-section">
+                <div class="side-label">Mini Chart</div>
+                <div class="mini-chart"><canvas id="miniChart"></canvas></div>
+            </div>
+
+            <!-- REAL CLAUDE AI PANEL -->
+            <div class="ai-panel">
+                <div class="ai-header">
+                    <div class="ai-logo"><i class="fas fa-robot"></i></div>
+                    <div>
+                        <div class="ai-name">ParkMind AI</div>
+                        <div class="ai-sub">Powered by Claude</div>
+                    </div>
+                </div>
+                <div class="ai-msg-list" id="aiMsgs"></div>
+                <div class="ai-chips">
+                    <span class="ai-chip" onclick="askAI('Best slot for me?')">Best slot?</span>
+                    <span class="ai-chip" onclick="askAI('How busy is it right now?')">How busy?</span>
+                    <span class="ai-chip" onclick="askAI('EV charging available?')">EV bays</span>
+                    <span class="ai-chip" onclick="askAI('What are the parking rates?')">Rates</span>
+                </div>
+                <div class="ai-input-row">
+                    <input class="ai-input" id="aiInput" placeholder="Ask anything about parking…"
+                        onkeydown="if(event.key==='Enter')askAI()">
+                    <button class="ai-send" onclick="askAI()"><i class="fas fa-paper-plane"></i></button>
+                </div>
+            </div>
+
+        </aside>
+
+        <!-- ═══ MAP AREA ═══ -->
+        <main class="map-area">
+            <div class="map-toolbar">
+                <div class="tb-title">Level <span id="activeLevel">1</span> — Parking Grid</div>
+                <div class="legend-items">
+                    <div class="legend-item">
+                        <div class="legend-dot" style="background:var(--green);"></div>Free
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-dot"
+                            style="background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.15);"></div>
+                        Occupied
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-dot" style="background:var(--orange);"></div>Your Slot
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-dot" style="background:var(--cyan);"></div>EV Bay
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-dot" style="background:var(--purple);"></div>Reserved
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-dot" style="background:var(--blue);border:2px solid var(--blue);"></div>AI
+                        Pick
+                    </div>
+                </div>
+                <div class="view-btns">
+                    <button class="vbtn on" onclick="setView('grid',this)"><i class="fas fa-th"></i></button>
+                    <button class="vbtn" onclick="setView('compact',this)"><i class="fas fa-list"></i></button>
+                </div>
+            </div>
+
+            <div class="map-scroll">
+                <div class="level-tabs">
+                    <div class="ltab on" onclick="switchLevel(1,this)">Level 1</div>
+                    <div class="ltab" onclick="switchLevel(2,this)">Level 2</div>
+                    <div class="ltab" onclick="switchLevel(3,this)">Level 3 (EV)</div>
+                    <div class="ltab" onclick="switchLevel(4,this)">Rooftop</div>
+                </div>
+                <div class="parking-building fade-in" id="parkingGrid"></div>
+            </div>
+        </main>
+
+        <!-- ═══ RIGHT PANEL ═══ -->
+        <aside class="right-panel">
+
+            <div class="rp-section">
+                <div class="rp-label">Selected Slot</div>
+                <div id="slotDetail">
+                    <div style="text-align:center;padding:20px;font-size:0.8rem;color:var(--text3);">
+                        <i class="fas fa-hand-pointer"
+                            style="font-size:1.5rem;display:block;margin-bottom:8px;opacity:0.3;"></i>
+                        Click any free slot to inspect
+                    </div>
+                </div>
+            </div>
+
+            <div class="rp-section">
+                <div class="rp-label">AI Algorithms</div>
+                <div class="algo-card lr">
+                    <div class="algo-name">LINEAR REGRESSION</div>
+                    <div class="algo-val" id="algoLR" style="color:var(--green);">—</div>
+                    <div style="font-size:0.6rem;color:var(--text3);margin-top:3px;">Next-hour occupancy forecast</div>
+                </div>
+                <div class="algo-card heat">
+                    <div class="algo-name">HEATMAP CLUSTERING</div>
+                    <div class="algo-val" id="algoHeat" style="color:var(--red);">—</div>
+                    <div style="font-size:0.6rem;color:var(--text3);margin-top:3px;">Hottest zone right now</div>
+                </div>
+                <div class="algo-card knn">
+                    <div class="algo-name">KNN SLOT SCORER</div>
+                    <div class="algo-val" id="algoKNN" style="color:var(--cyan);">—</div>
+                    <div style="font-size:0.6rem;color:var(--text3);margin-top:3px;">Nearest optimal slot to entry</div>
+                </div>
+                <div class="algo-card pred">
+                    <div class="algo-name">SURGE PREDICTOR</div>
+                    <div class="algo-val" id="algoSurge" style="color:var(--orange);">—</div>
+                    <div style="font-size:0.6rem;color:var(--text3);margin-top:3px;">Price surge risk in next 30 min
+                    </div>
+                </div>
+            </div>
+
+            <div class="rp-section">
+                <div class="rp-label">Occupancy Trend</div>
+                <div style="height:110px;"><canvas id="trendChart"></canvas></div>
+            </div>
+
+            <div class="rp-section">
+                <div class="rp-label">Quick Stats</div>
+                <div style="display:flex;flex-direction:column;gap:6px;" id="quickStats"></div>
+            </div>
+
+        </aside>
+
+    </div><!-- end shell -->
+
+    <script>
+        // ══════════════════════════════════════════════
+        //  CURSOR
+        // ══════════════════════════════════════════════
+        const cur = document.getElementById('cur'), cur2 = document.getElementById('cur2');
+        document.addEventListener('mousemove', e => { cur.style.left = e.clientX + 'px'; cur.style.top = e.clientY + 'px'; cur2.style.left = e.clientX + 'px'; cur2.style.top = e.clientY + 'px'; });
+
+        // ══════════════════════════════════════════════
+        //  PARTICLES
+        // ══════════════════════════════════════════════
+        const pcv = document.getElementById('pcv'), pctx = pcv.getContext('2d');
+        function rpcv() { pcv.width = innerWidth; pcv.height = innerHeight; } rpcv(); window.addEventListener('resize', rpcv);
+        const pts = Array.from({ length: 40 }, () => ({ x: Math.random() * innerWidth, y: Math.random() * innerHeight, vx: (Math.random() - .5) * .25, vy: (Math.random() - .5) * .25, r: Math.random() * 1.2 + .3 }));
+        (function ap() { pctx.clearRect(0, 0, pcv.width, pcv.height); pts.forEach(p => { p.x += p.vx; p.y += p.vy; if (p.x < 0 || p.x > pcv.width) p.vx *= -1; if (p.y < 0 || p.y > pcv.height) p.vy *= -1; pctx.beginPath(); pctx.arc(p.x, p.y, p.r, 0, Math.PI * 2); pctx.fillStyle = 'rgba(59,130,246,0.15)'; pctx.fill(); }); requestAnimationFrame(ap); })();
+
+        // ══════════════════════════════════════════════
+        //  SLOT DATA SYSTEM
+        // ══════════════════════════════════════════════
+        const TOTAL = 1300;
+        let bookedSlots = JSON.parse(localStorage.getItem('bookedSlots')) || [];
+        let activeTicket = JSON.parse(localStorage.getItem('activeTicket'));
+        let activeFilter = 'all'; let heatMode = false; let currentView = 'grid'; let currentLevel = 1;
+        let selectedSlot = null; let aiRecommended = null;
+
+        // Slot config per level
+        const levelConfig = {
+            1: { rows: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'], slotsPerRow: 25, startId: 1, evRows: [] },
+            2: { rows: ['I', 'J', 'K', 'L', 'M', 'N'], slotsPerRow: 25, startId: 201, evRows: [] },
+            3: { rows: ['O', 'P', 'Q', 'R'], slotsPerRow: 25, startId: 401, evRows: ['O', 'P'] },// EV level
+            4: { rows: ['S', 'T', 'U', 'V'], slotsPerRow: 25, startId: 501, evRows: [] },
+        };
+
+        // Generate slot states
+        function genSlots(level) {
+            const cfg = levelConfig[level];
+            const slots = []; let id = cfg.startId;
+            cfg.rows.forEach(row => {
+                for (let i = 1; i <= cfg.slotsPerRow; i++) {
+                    const isEV = cfg.evRows.includes(row);
+                    const isReserved = Math.random() < 0.04;
+                    const isYours = activeTicket && activeTicket.slot === id;
+                    let occupied = bookedSlots.includes(id) || Math.random() < 0.42;
+                    let type = 'free';
+                    if (isYours) type = 'yours';
+                    else if (isEV && !occupied) type = 'ev';
+                    else if (isReserved && !isYours) type = 'reserved';
+                    else if (occupied) type = 'occ';
+                    slots.push({ id, row, num: i, type, isEV, floor: level });
+                    id++;
+                }
+            });
+            return slots;
+        }
+
+        let slotsData = genSlots(1);
+
+        // ══════════════════════════════════════════════
+        //  ALGORITHMS
+        // ══════════════════════════════════════════════
+
+        // 1. Linear Regression — occupancy forecast
+        function linRegForecast() {
+            const recs = JSON.parse(localStorage.getItem('admin_records')) || [];
+            if (recs.length < 4) return null;
+            const n = recs.length, pts = recs.slice(-20);
+            let sx = 0, sy = 0, sxy = 0, sxx = 0;
+            pts.forEach((r, i) => { sx += i; sy += r.amount; sxy += i * r.amount; sxx += i * i; });
+            const m = (n * sxy - sx * sy) / ((n * sxx - sx * sx) || 1);
+            const b = (sy - m * sx) / n;
+            const trend = m > 0 ? '↑ Rising' : '↓ Falling';
+            const pct = Math.min(95, Math.max(30, ((bookedSlots.length + Math.floor(TOTAL * 0.35)) / TOTAL * 100 + m * 5)));
+            return `${pct.toFixed(0)}% ${trend}`;
+        }
+
+        // 2. Heatmap Clustering — find hottest zone
+        function heatCluster() {
+            const zones = { A: 0, B: 0, C: 0, D: 0 };
+            slotsData.forEach(s => { if (s.type === 'occ' || s.type === 'reserved') { const z = s.row <= 8 ? 'A' : s.row <= 'N' ? 'B' : s.row <= 'R' ? 'C' : 'D'; zones[z]++; } });
+            const hot = Object.entries(zones).sort((a, b) => b[1] - a[1])[0];
+            return `Row-${hot[0]} (${hot[1]} occ.)`;
+        }
+
+        // 3. K-NN Slot Scorer — find optimal slot near entry
+        function knnBestSlot() {
+            const free = slotsData.filter(s => s.type === 'free' || s.type === 'ev');
+            if (!free.length) return null;
+            // Score = low id (close to entry) + bonus for EV
+            const scored = free.map(s => ({ ...s, score: 1000 / s.id + (s.isEV ? 50 : 0) }));
+            return scored.sort((a, b) => b.score - a.score)[0];
+        }
+
+        // 4. Surge Predictor (time-based fuzzy)
+        function surgePred() {
+            const h = new Date().getHours(); const pct = (bookedSlots.length + Math.floor(TOTAL * 0.35)) / TOTAL;
+            if ((h >= 7 && h <= 9 || h >= 17 && h <= 20) && pct > 0.6) return 'HIGH RISK 🔴';
+            if (pct > 0.5) return 'MODERATE 🟡';
+            return 'LOW RISK 🟢';
+        }
+
+        // 5. Dijkstra-inspired path score (distance from entry gate)
+        function distScore(slot) { return Math.sqrt(Math.pow(slot.num - 1, 2) + Math.pow(slot.row.charCodeAt(0) - 65, 2)); }
+
+        // ══════════════════════════════════════════════
+        //  BUILD GRID
+        // ══════════════════════════════════════════════
+        function buildGrid() {
+            const grid = document.getElementById('parkingGrid');
+            grid.innerHTML = '';
+            const rows = {}; slotsData.forEach(s => { if (!rows[s.row]) rows[s.row] = []; rows[s.row].push(s); });
+
+            const rowKeys = Object.keys(rows);
+            rowKeys.forEach((row, ri) => {
+                // Lane divider every 2 rows
+                if (ri > 0 && ri % 2 === 0) { const lane = document.createElement('div'); lane.className = 'lane'; grid.appendChild(lane); }
+                const wrap = document.createElement('div'); wrap.className = 'row-wrap';
+                const lbl = document.createElement('div'); lbl.className = 'row-label'; lbl.textContent = row; wrap.appendChild(lbl);
+                const sr = document.createElement('div'); sr.className = 'slots-row';
+                rows[row].forEach(s => sr.appendChild(makeSlot(s)));
+                wrap.appendChild(sr); grid.appendChild(wrap);
+            });
+        }
+
+        function makeSlot(s) {
+            const el = document.createElement('div');
+            let cls = s.type;
+            if (s.id === aiRecommended) cls += ` ai-rec`;
+            if (heatMode) { const d = distScore(s); if (d < 5) cls += ` heat-high`; else if (d < 10) cls += ` heat-med`; }
+            el.className = `slot ${cls}`;
+            el.id = `slot-${s.id}`;
+            el.title = `Slot #${s.id}`;
+
+            const icon = { free: '⬜', occ: '🚗', yours: '⭐', ev: '⚡', reserved: '🔒' }[s.type] || '';
+            el.innerHTML = `
+    <div class="slot-icon">${icon}</div>
+    <div class="slot-num">${s.id}</div>
+    <div class="slot-tooltip">
+      <b>Slot #${s.id}</b><br>
+      Row ${s.row} · Level ${currentLevel}<br>
+      <span style="color:${s.type === 'free' ? '#10b981' : s.type === 'ev' ? '#06b6d4' : s.type === 'yours' ? '#f59e0b' : s.type === 'reserved' ? '#8b5cf6' : '#94a3b8'}">${s.type.toUpperCase()}${s.isEV ? ' · EV' : ''}</span>
+    </div>`;
+
+            // Apply filter visibility
+            applyFilterEl(el, s);
+
+            if (s.type === 'free' || s.type === 'ev' || s.type === 'yours') {
+                el.addEventListener('click', () => selectSlot(s));
+            }
+            return el;
+        }
+
+        function applyFilterEl(el, s) {
+            const show = activeFilter === 'all' || (activeFilter === 'free' && (s.type === 'free' || s.type === 'ev')) || activeFilter === s.type;
+            el.style.opacity = show ? '1' : '0.18';
+            el.style.pointerEvents = show ? '' : 'none';
+        }
+
+        // ══════════════════════════════════════════════
+        //  SLOT SELECTION
+        // ══════════════════════════════════════════════
+        function selectSlot(s) {
+            selectedSlot = s;
+            const panel = document.getElementById('slotDetail');
+            const isYours = s.type === 'yours';
+            const user = JSON.parse(localStorage.getItem('pmCurrentUser'));
+            panel.innerHTML = `
+    <div class="slot-detail">
+      <div class="sd-head">
+        <div class="sd-num">#${s.id}</div>
+        <div class="sd-badge" style="background:${badgeBg(s.type)};color:${badgeColor(s.type)};">${s.type.toUpperCase()}${s.isEV ? ' ⚡' : ''}</div>
+      </div>
+      <div class="sd-rows">
+        <div class="sd-row"><span class="sd-key">Row</span><span class="sd-val">${s.row}</span></div>
+        <div class="sd-row"><span class="sd-key">Level</span><span class="sd-val">${currentLevel}</span></div>
+        <div class="sd-row"><span class="sd-key">Rate</span><span class="sd-val">${s.isEV ? '₹30/hr' : '₹20/hr'}</span></div>
+        <div class="sd-row"><span class="sd-key">Distance</span><span class="sd-val">${distScore(s).toFixed(0)}m from entry</span></div>
+        <div class="sd-row"><span class="sd-key">AI Score</span><span class="sd-val" style="color:var(--blue);">${scoreSlot(s)}/100</span></div>
+      </div>
+      <button class="btn-book" onclick="bookSlot(${s.id})" ${isYours || s.type === 'occ' || s.type === 'reserved' ? 'disabled' : ''}>
+        ${isYours ? '✓ Your Slot' : s.type === 'ev' ? '⚡ Book EV Bay' : 'Book This Slot'}
+      </button>
+    </div>`;
+            // Highlight
+            document.querySelectorAll('.slot').forEach(el => el.style.outline = 'none');
+            const el = document.getElementById('slot-' + s.id);
+            if (el) el.style.outline = '2px solid var(--blue)';
+            toast(`Slot #${s.id} selected — ${s.type.toUpperCase()}${s.isEV ? ' (EV)' : ''}`, s.type === 'free' || s.type === 'ev' ? 'ok' : 'inf');
+        }
+
+        function badgeBg(t) { return { free: 'rgba(16,185,129,0.12)', ev: 'rgba(6,182,212,0.12)', occ: 'rgba(255,255,255,0.05)', yours: 'rgba(245,158,11,0.12)', reserved: 'rgba(139,92,246,0.12)' }[t] || 'rgba(255,255,255,0.06)'; }
+        function badgeColor(t) { return { free: 'var(--green)', ev: 'var(--cyan)', occ: 'var(--text3)', yours: 'var(--orange)', reserved: 'var(--purple)' }[t] || 'var(--text2)'; }
+
+        // Score a slot 0-100
+        function scoreSlot(s) {
+            if (s.type === 'occ' || s.type === 'reserved') return 0;
+            let score = 100;
+            score -= distScore(s) * 2;// proximity penalty
+            if (s.isEV) score += 15;
+            if (s.id === aiRecommended) score += 10;
+            return Math.max(0, Math.min(100, Math.round(score)));
+        }
+
+        // ══════════════════════════════════════════════
+        //  BOOKING
+        // ══════════════════════════════════════════════
+        function bookSlot(id) {
+            const user = JSON.parse(localStorage.getItem('pmCurrentUser'));
+            if (!user) {
+                Swal.fire({ title: 'Sign In Required', text: 'Please sign in to book a slot.', icon: 'warning', confirmButtonColor: '#3b82f6', confirmButtonText: 'Go to Dashboard' }).then(r => { if (r.isConfirmed) location.href = 'index.html'; });
+                return;
+            }
+            const slot = slotsData.find(s => s.id === id); if (!slot) return;
+            const rate = slot.isEV ? 30 : 20;
+            Swal.fire({
+                title: `Book Slot #${id}`,
+                html: `<div style="font-family:'DM Sans';text-align:left;font-size:0.9rem;line-height:2;">
+      <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #333;"><span style="color:#94a3b8;">Vehicle Number</span><input id="swal-veh" style="background:#1e293b;border:1px solid #334155;color:white;padding:4px 8px;border-radius:6px;font-family:monospace;width:130px;" placeholder="MH-01-AB-1234"></div>
+      <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #333;"><span style="color:#94a3b8;">Row / Level</span><b style="color:white;">${slot.row} / Level ${currentLevel}</b></div>
+      <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #333;"><span style="color:#94a3b8;">Rate</span><b style="color:#10b981;">₹${rate}/hr</b></div>
+      <div style="display:flex;justify-content:space-between;padding:6px 0;"><span style="color:#94a3b8;">Wallet</span><b style="color:#3b82f6;">₹${user.balance.toFixed(2)}</b></div>
+    </div>`,
+                background: '#0d1424', color: 'white',
+                confirmButtonText: 'Confirm Booking', confirmButtonColor: '#3b82f6',
+                showCancelButton: true, cancelButtonText: 'Cancel',
+                preConfirm: () => { const v = document.getElementById('swal-veh')?.value.trim(); if (!v) { Swal.showValidationMessage('Enter your vehicle number'); return false; } return v; }
+            }).then(r => {
+                if (r.isConfirmed) {
+                    const veh = r.value; const token = genToken();
+                    const ticket = { slot: id, veh, token, timeStr: new Date().toLocaleTimeString(), timestamp: new Date().toISOString(), pnr: token, level: currentLevel, isEV: slot.isEV };
+                    localStorage.setItem('activeTicket', JSON.stringify(ticket));
+                    let bs = JSON.parse(localStorage.getItem('bookedSlots')) || []; bs.push(id); localStorage.setItem('bookedSlots', JSON.stringify(bs));
+                    Swal.fire({ title: 'Booking Confirmed! 🎉', html: `<div style="font-family:'DM Sans'"><b style="font-size:1.5rem;color:#3b82f6;">#${id}</b><br>Token: <code style="background:#1e293b;padding:4px 8px;border-radius:4px;">${token}</code><br><small style="color:#94a3b8;">Show QR at entry gate</small></div>`, icon: 'success', confirmButtonColor: '#3b82f6', background: '#0d1424', color: 'white' }).then(() => location.reload());
+                }
+            });
+        }
+
+        function genToken() { return Array.from({ length: 10 }, () => 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'[~~(Math.random() * 36)]).join(''); }
+
+        // ══════════════════════════════════════════════
+        //  FILTER + SEARCH
+        // ══════════════════════════════════════════════
+        function setFilter(f, el) {
+            activeFilter = f;
+            document.querySelectorAll('.fbtn').forEach(b => b.classList.remove('on'));
+            el.classList.add('on');
+            document.querySelectorAll('.slot').forEach(el => {
+                const id = parseInt(el.id.replace('slot-', '')); const s = slotsData.find(x => x.id === id);
+                if (s) applyFilterEl(el, s);
+            });
+        }
+
+        function filterSlots() {
+            const q = document.getElementById('slotSearch').value.toLowerCase().trim();
+            document.querySelectorAll('.slot').forEach(el => {
+                if (!q) { el.style.opacity = '1'; el.style.pointerEvents = ''; return; }
+                el.style.opacity = el.title.toLowerCase().includes(q) ? '1' : '0.1';
+            });
+        }
+
+        // ══════════════════════════════════════════════
+        //  HEATMAP
+        // ══════════════════════════════════════════════
+        function toggleHeat() {
+            heatMode = !heatMode;
+            const btn = document.getElementById('heatToggle');
+            btn.classList.toggle('active', heatMode);
+            buildGrid();
+            toast(heatMode ? 'Heatmap ON — showing demand hotspots' : 'Heatmap OFF', heatMode ? 'inf' : 'inf');
+        }
+
+        // ══════════════════════════════════════════════
+        //  AI RECOMMENDATION
+        // ══════════════════════════════════════════════
+        function runAIRecommend() {
+            const best = knnBestSlot();
+            if (!best) { toast('No free slots available', 'err'); return; }
+            aiRecommended = best.id;
+            buildGrid();
+            // Scroll to slot
+            const el = document.getElementById('slot-' + best.id);
+            if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            selectSlot(best);
+            toast(`AI recommends Slot #${best.id} (Row ${best.row})${best.isEV ? ' — EV Bay' : ''}. AI Score: ${scoreSlot(best)}/100`, 'ok');
+            addAiMsg(`🤖 I recommend <b>Slot #${best.id}</b> in Row ${best.row}. It's ${distScore(best).toFixed(0)}m from the entry gate${best.isEV ? ', with EV charging' : ''} and has the best score of ${scoreSlot(best)}/100.`, 'bot');
+        }
+
+        // ══════════════════════════════════════════════
+        //  REAL CLAUDE AI
+        // ══════════════════════════════════════════════
+        function addAiMsg(html, role) {
+            const list = document.getElementById('aiMsgs');
+            const d = document.createElement('div'); d.className = `ai-msg ${role}`; d.innerHTML = html;
+            list.appendChild(d); list.scrollTop = list.scrollHeight;
+        }
+
+        async function askAI(preText) {
+            const input = document.getElementById('aiInput');
+            const q = preText || input.value.trim();
+            if (!q) return;
+            input.value = '';
+            addAiMsg(q, 'user');
+
+            // Build context
+            const freeSlots = slotsData.filter(s => s.type === 'free' || s.type === 'ev').length;
+            const occSlots = slotsData.filter(s => s.type === 'occ').length;
+            const pct = ((occSlots + bookedSlots.length) / (slotsData.length) * 100).toFixed(0);
+            const best = knnBestSlot();
+            const user = JSON.parse(localStorage.getItem('pmCurrentUser'));
+            const ticket = JSON.parse(localStorage.getItem('activeTicket'));
+            const context = `You are ParkMind, an AI assistant for ParkMate Prime parking system. Be concise (2-3 sentences max). Current data: ${freeSlots} free slots, ${occSlots} occupied, ${pct}% full, Level ${currentLevel} active, ${best ? `best available slot is #${best.id} in Row ${best.row}` : 'no free slots'}${ticket ? `, user has active booking at Slot #${ticket.slot}` : ''}${user ? `, user wallet: ₹${user.balance}` : ''}. Rates: Zone A ₹20/hr, EV ₹30/hr. 24 EV bays on Level 3.`;
+
+            // Typing indicator
+            const tid = 'tid' + Date.now();
+            const td = document.createElement('div'); td.className = 'ai-msg bot'; td.id = tid;
+            td.innerHTML = '<div class="typing"><span></span><span></span><span></span></div>';
+            document.getElementById('aiMsgs').appendChild(td);
+            document.getElementById('aiMsgs').scrollTop = 99999;
+
+            try {
+                const resp = await fetch('https://api.anthropic.com/v1/messages', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        model: 'claude-sonnet-4-20250514',
+                        max_tokens: 300,
+                        system: context,
+                        messages: [{ role: 'user', content: q }]
+                    })
+                });
+                const data = await resp.json();
+                const reply = data.content?.[0]?.text || 'I had trouble processing that. Please try again.';
+                document.getElementById(tid).innerHTML = reply;
+            } catch (e) {
+                // Fallback to local logic
+                document.getElementById(tid).innerHTML = localAI(q, freeSlots, pct, best, user);
+            }
+            document.getElementById('aiMsgs').scrollTop = 99999;
+        }
+
+        // Fallback local AI (runs if API fails)
+        function localAI(q, free, pct, best, user) {
+            const t = q.toLowerCase();
+            if (/(best|recommend|which slot|where)/.test(t)) return best ? `🤖 Best slot right now is <b>#${best.id}</b> (Row ${best.row}${best.isEV ? ', EV Bay' : ''}) — closest to entry with score ${scoreSlot(best)}/100.` : `No free slots available right now.`;
+            if (/(busy|full|occupancy|how many)/.test(t)) return `🤖 Currently <b>${pct}% full</b>. ${free} free slots on Level ${currentLevel}. ${pct > 70 ? 'Demand is high — book now!' : 'Good availability.'}`;
+            if (/(ev|electric|charge)/.test(t)) return `⚡ Level 3 has 24 dedicated EV bays at ₹30/hr. ${slotsData.filter(s => s.type === 'ev').length} currently available.`;
+            if (/(rate|price|cost|₹)/.test(t)) return `💰 Zone A/B: ₹20/hr. EV Bays: ₹30/hr. Premium Rooftop: ₹25/hr. Min charge: ₹20.`;
+            if (/(wallet|balance|money)/.test(t)) return user ? `💳 Your wallet has <b>₹${user.balance.toFixed(2)}</b> — enough for ~${Math.floor(user.balance / 20)} hours of standard parking.` : `Sign in to check your wallet.`;
+            if (/(ticket|booking|active)/.test(t)) { const tk = JSON.parse(localStorage.getItem('activeTicket')); return tk ? `🎫 You have Slot #${tk.slot} booked (${tk.veh}). Use Exit & Pay from the dashboard.` : `No active booking. Click any green slot to book.`; }
+            return `🤖 I can help with slot recommendations, occupancy, pricing, or your booking. What would you like to know?`;
+        }
+
+        // ══════════════════════════════════════════════
+        //  STATS + CHARTS
+        // ══════════════════════════════════════════════
+        let trendChart = null, miniChart = null;
+        function initCharts() {
+            const tc = document.getElementById('trendChart')?.getContext('2d');
+            if (tc) {
+                const labels = Array.from({ length: 12 }, (_, i) => { const h = new Date(); h.setHours(h.getHours() - 11 + i); return String(h.getHours()).padStart(2, '0') + ':00'; });
+                const data = labels.map((_, i) => 30 + Math.random() * 40 + (i > 7 ? 20 : 0));
+                trendChart = new Chart(tc, { type: 'line', data: { labels, datasets: [{ data, borderColor: '#3b82f6', backgroundColor: 'rgba(59,130,246,0.07)', fill: true, tension: 0.4, borderWidth: 2, pointRadius: 0 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { enabled: false } }, scales: { x: { display: false }, y: { display: false } } } });
+            }
+            const mc = document.getElementById('miniChart')?.getContext('2d');
+            if (mc) {
+                const d = [35, 42, 38, 55, 62, 58, 70, 65, 72, 68];
+                miniChart = new Chart(mc, { type: 'bar', data: { labels: d.map((_, i) => i), datasets: [{ data: d, backgroundColor: d.map(v => v > 60 ? 'rgba(239,68,68,0.6)' : v > 45 ? 'rgba(245,158,11,0.6)' : 'rgba(59,130,246,0.5)'), borderRadius: 3 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { enabled: false } }, scales: { x: { display: false }, y: { display: false } } } });
+            }
+        }
+
+        function updateStats() {
+            const free = slotsData.filter(s => s.type === 'free' || s.type === 'ev').length;
+            const occ = slotsData.filter(s => s.type === 'occ').length;
+            const pct = ((occ + bookedSlots.length) / slotsData.length * 100);
+            document.getElementById('sAvail').textContent = free;
+            document.getElementById('sOcc').textContent = occ + bookedSlots.length;
+            document.getElementById('sPct').textContent = pct.toFixed(0) + '%';
+
+            // Zone bars
+            const zones = [{ name: 'Zone A (L1)', color: '#10b981', pct: pct }, { name: 'Zone B (L2)', color: '#3b82f6', pct: pct * 0.8 }, { name: 'Zone C (EV)', color: '#06b6d4', pct: 40 }, { name: 'Rooftop', color: '#8b5cf6', pct: pct * 0.6 }];
+            document.getElementById('zoneBars').innerHTML = zones.map(z => `<div class="zone-bar"><div class="zone-row"><span class="zone-name">${z.name}</span><span class="zone-count">${(100 - z.pct).toFixed(0)} free</span></div><div class="bar-track"><div class="bar-fill" style="width:${z.pct.toFixed(0)}%;background:${z.color};"></div></div></div>`).join('');
+
+            // Algorithms
+            const lr = linRegForecast();
+            document.getElementById('algoLR').textContent = lr || '—';
+            document.getElementById('algoHeat').textContent = heatCluster();
+            const knn = knnBestSlot();
+            document.getElementById('algoKNN').textContent = knn ? `Slot #${knn.id}` : 'None';
+            document.getElementById('algoSurge').textContent = surgePred();
+
+            // Quick stats
+            document.getElementById('quickStats').innerHTML = `
+    <div style="display:flex;justify-content:space-between;font-size:0.76rem;"><span style="color:var(--text3);">Your Level</span><span style="font-family:'JetBrains Mono';">Level ${currentLevel}</span></div>
+    <div style="display:flex;justify-content:space-between;font-size:0.76rem;"><span style="color:var(--text3);">EV Available</span><span style="font-family:'JetBrains Mono';color:var(--cyan);">${slotsData.filter(s => s.type === 'ev').length}</span></div>
+    <div style="display:flex;justify-content:space-between;font-size:0.76rem;"><span style="color:var(--text3);">Reserved</span><span style="font-family:'JetBrains Mono';color:var(--purple);">${slotsData.filter(s => s.type === 'reserved').length}</span></div>
+    <div style="display:flex;justify-content:space-between;font-size:0.76rem;"><span style="color:var(--text3);">Last updated</span><span style="font-family:'JetBrains Mono';font-size:0.65rem;color:var(--text3);">${new Date().toLocaleTimeString()}</span></div>`;
+        }
+
+        // ══════════════════════════════════════════════
+        //  LEVEL SWITCH
+        // ══════════════════════════════════════════════
+        function switchLevel(n, el) {
+            currentLevel = n; selectedSlot = null; aiRecommended = null;
+            slotsData = genSlots(n);
+            document.querySelectorAll('.ltab').forEach(t => t.classList.remove('on'));
+            el.classList.add('on');
+            document.getElementById('activeLevel').textContent = n;
+            buildGrid(); updateStats();
+            toast(`Switched to Level ${n}`, 'inf');
+        }
+
+        // ══════════════════════════════════════════════
+        //  VIEW MODE
+        // ══════════════════════════════════════════════
+        function setView(v, el) {
+            currentView = v;
+            document.querySelectorAll('.vbtn').forEach(b => b.classList.remove('on')); el.classList.add('on');
+            if (v === 'compact') {
+                document.querySelectorAll('.slot').forEach(s => { s.style.width = '28px'; s.style.height = '34px'; });
+                document.querySelectorAll('.slot-num').forEach(s => s.style.fontSize = '0.48rem');
+                document.querySelectorAll('.slot-icon').forEach(s => s.style.display = 'none');
+            } else {
+                document.querySelectorAll('.slot').forEach(s => { s.style.width = ''; s.style.height = ''; });
+                document.querySelectorAll('.slot-num').forEach(s => s.style.fontSize = '');
+                document.querySelectorAll('.slot-icon').forEach(s => s.style.display = '');
+            }
+        }
+
+        // ══════════════════════════════════════════════
+        //  REFRESH
+        // ══════════════════════════════════════════════
+        function refreshAll() {
+            bookedSlots = JSON.parse(localStorage.getItem('bookedSlots')) || [];
+            activeTicket = JSON.parse(localStorage.getItem('activeTicket'));
+            slotsData = genSlots(currentLevel);
+            buildGrid(); updateStats();
+            toast('Grid refreshed', 'ok');
+        }
+
+        // ══════════════════════════════════════════════
+        //  TOAST
+        // ══════════════════════════════════════════════
+        function toast(msg, type = 'ok') {
+            const c = document.getElementById('toasts');
+            const d = document.createElement('div'); d.className = `toast ${type}`;
+            const icons = { ok: 'fas fa-check-circle', err: 'fas fa-times-circle', inf: 'fas fa-info-circle' };
+            d.innerHTML = `<i class="${icons[type]}" ></i>${msg}`;
+            c.appendChild(d);
+            setTimeout(() => { d.style.opacity = '0'; d.style.transition = '0.2s'; setTimeout(() => d.remove(), 200); }, 3000);
+        }
+
+        // ══════════════════════════════════════════════
+        //  INIT
+        // ══════════════════════════════════════════════
+        window.onload = function () {
+            buildGrid();
+            updateStats();
+            initCharts();
+
+            // Greet in AI panel
+            addAiMsg(`👋 Hi! I'm ParkMind, your AI parking assistant. I'm analyzing <b>Level ${currentLevel}</b> right now. Ask me for the best slot, EV availability, or anything about parking!`, 'bot');
+
+            // Auto-suggest if active booking
+            if (activeTicket) {
+                setTimeout(() => {
+                    const el = document.getElementById('slot-' + activeTicket.slot);
+                    if (el) { el.scrollIntoView({ behavior: 'smooth', block: 'center' }); el.click(); }
+                }, 400);
+            } else {
+                setTimeout(() => {
+                    const best = knnBestSlot();
+                    if (best) { addAiMsg(`💡 Quick tip: Slot <b>#${best.id}</b> (Row ${best.row}) is the closest free spot to the entry gate right now.`, 'bot'); }
+                }, 1000);
+            }
+
+            setInterval(() => {
+                // Simulate minor live changes
+                slotsData.forEach(s => { if (s.type === 'free' && Math.random() < 0.01) s.type = 'occ'; if (s.type === 'occ' && Math.random() < 0.008) s.type = 'free'; });
+                updateStats();
+            }, 8000);
+        };
+    </script>
+</body>
+
+</html>
